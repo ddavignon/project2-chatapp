@@ -8,17 +8,25 @@ const styles = {
     title: {
         height: '48px',
         margin: '1em 0'
+    },
+    messageList: {
+        position: 'fixed',
+        maxHeight: '76%',
+        bottom: '8em',
+        width: '79%',
+        overflowY: 'scroll'
     }
 }
 
 class MessageList extends Component {
     render() {
         return (
-            <div className='messages'>
+            <div className='messages container-fluid'>
                 <List>
                 <Paper zDepth={3} style={styles.title}>
                   <Subheader> Conversation: </Subheader>
                 </Paper>
+                <div style={styles.messageList} className="container-fluid">
                 {
                   this.props.messages.map((message, i) => {
                       return (
@@ -30,6 +38,7 @@ class MessageList extends Component {
                       );
                   })
                 }
+                </div>
                 </List>
             </div>
         );

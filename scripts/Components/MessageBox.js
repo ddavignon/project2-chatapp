@@ -16,7 +16,7 @@ const styles = {
         paddingRight: '20px'
     },
     sendButton: {
-        paddingTop: '.5em'
+        paddingTop: '.5em',
     }
 }
 

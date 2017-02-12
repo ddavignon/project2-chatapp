@@ -3,12 +3,19 @@ import { ListItem } from 'material-ui/List';
 import Avatar from 'material-ui/Avatar';
 import Paper from 'material-ui/Paper';
 
+const styles = {
+    messageItem: {
+        margin: '.3em 0'
+    }
+}
+
 class Message extends Component {
     render() {
         return (
             <div className='message'>
-                <Paper zDepth={3}>
+                <Paper zDepth={1}>
                     <ListItem
+                        style={styles.messageItem}
                         leftAvatar={<Avatar src="" />}
                         primaryText={this.props.user}
                         secondaryText={

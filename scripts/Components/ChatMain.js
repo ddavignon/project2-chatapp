@@ -114,7 +114,7 @@ class ChatMain extends Component {
                   <UserList users={this.state.users} total={this.state.data}/>
                 </div>
                 <div className="col-md-10">
-                  <MessageList messages={this.state.messages}/>
+                  <MessageList messages={this.state.messages} />
                 </div>
                 <MessageBox onMessageSubmit={this.handleMessageSubmit} user={this.state.user}/>
             </div>

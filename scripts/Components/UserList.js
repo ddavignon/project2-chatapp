@@ -20,7 +20,7 @@ class UserList extends Component {
                     <Paper zDepth={3} style={styles.paper}>
                     <Subheader>Online Users: {this.props.total}</Subheader>
                     </Paper>   
-                     <Paper zDepth={3} style={styles.paper}>
+                     <Paper zDepth={2} style={styles.paper}>
                     {
                         this.props.users.map((user, i) => {
                             return (
