@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import Message from './Message';
+import { List } from 'material-ui/List';
 
 class MessageList extends Component {
     
@@ -7,17 +8,19 @@ class MessageList extends Component {
         return (
             <div className='messages'>
                 <h2> Conversation: </h2>
+                <List>
                 {
                   this.props.messages.map((message, i) => {
                       return (
-                          <Message
-                              key={i}
-                              user={message.user}
-                              text={message.text}
-                          />
+                            <Message
+                                messageKey={i}
+                                user={message.user}
+                                text={message.text}
+                            />
                       );
                   })
                 }
+                </List>
             </div>
         );
     }

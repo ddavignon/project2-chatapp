@@ -1,21 +1,28 @@
 import React, { Component } from 'react';
+import {List, ListItem} from 'material-ui/List';
+import Avatar from 'material-ui/Avatar';
+import Subheader from 'material-ui/Subheader';
+import CommunicationChatBubble from 'material-ui/svg-icons/communication/chat-bubble';
 
 class UserList extends Component {
     render() {
       return (
           <div className='users'>
-              <h3> Online Users </h3>
-              <ul>
+              <List>
+                  <Subheader>Online Users</Subheader>
                   {
                       this.props.users.map((user, i) => {
                           return (
-                              <li key={i}>
-                                  {user}
-                              </li>
+                              <ListItem 
+                              key={i}
+                              primaryText={user}
+                              leftAvatar={<Avatar src="" />}
+                              rightIcon={<CommunicationChatBubble />}
+                              />
                           );
                       })
                   }
-              </ul>                
+              </List>              
           </div>
       );
   }

@@ -1,6 +1,6 @@
 import os
 from flask import Flask, render_template
-from flask_socketio import SocketIO, send
+from flask_socketio import SocketIO
 # from flask_sqlalchemy import SQLAlchemy
 
 
@@ -37,8 +37,11 @@ def handleMessage(message):
     # db.session.add(message)
     # db.session.commit()
     
-    socketio.send(message, broadcast=True)
-    #emit('message', {'data': 'got it!'})
+    socketio.emit('message', {'data': 'got it!'})
+
+@socketio.on('send:message')
+def sendMessage(message):
+    print 'sent message', message
 
 if __name__ == '__main__':
     socketio.run(
