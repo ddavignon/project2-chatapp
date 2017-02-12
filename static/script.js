@@ -16233,7 +16233,7 @@ var App = function (_Component) {
           { className: 'App' },
           _react2.default.createElement(_AppBar2.default, {
             style: styles,
-            title: 'Chatter',
+            title: 'ChittChatt',
             showMenuIconButton: false
           }),
           _react2.default.createElement(_ChatMain2.default, null)

@@ -1,2 +1,17 @@
+click==6.7
 Flask==0.12
+Flask-FlatPages==0.6
+Flask-SocketIO==2.8.2
+Frozen-Flask==0.11
+itsdangerous==0.24
 Jinja2==2.9.4
+Markdown==2.6.8
+MarkupSafe==0.23
+Pygments==1.6
+pyperclip==1.5.27
+python-engineio==1.1.2
+python-socketio==1.6.3
+PyYAML==3.12
+six==1.10.0
+virtualenv==15.1.0
+Werkzeug==0.11.15

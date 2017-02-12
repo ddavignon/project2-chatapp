@@ -19,7 +19,7 @@ class App extends Component {
               <div className="App">
                 <AppBar
                   style={styles}
-                  title="Chatter"
+                  title="ChittChatt"
                   showMenuIconButton={false}
                 />
                 <ChatMain />
