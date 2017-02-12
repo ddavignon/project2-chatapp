@@ -6,11 +6,17 @@ import TextField from 'material-ui/TextField';
 const styles = {
     form: {
         position: 'fixed',
-        bottom: '0',
+        bottom: '20px',
         width: '100%'
     },
     messageBox: {
         paddingLeft: '10px'
+    },
+    shadowBox: {
+        paddingRight: '20px'
+    },
+    sendButton: {
+        paddingTop: '.5em'
     }
 }
 
@@ -31,7 +37,6 @@ class MessageBox extends Component {
             "user": this.props.user,
             "text": this.state.text
         }
-        console.log("Handle submit: " + message.user + message.text);
         this
             .props
             .onMessageSubmit(message);
@@ -45,19 +50,20 @@ class MessageBox extends Component {
     render() {
         return (
         <form onSubmit={this.handleSubmit} style={styles.form} className="pull-right">
-                <div className="col-md-8">
+                <div className="col-md-9 col-md-offset-2">
+                    <Paper zDepth={2} style={styles.shadowBox}>
                     <TextField
                       name="messages"
                       style={styles.messageBox}
                       placeholder="Message"
                       type="text"
                       fullWidth={true}
-                      multiLine={true}
                       value={this.state.text}
                       onChange={this.changeHandler}
                       />
+                      </Paper>
                 </div>
-                <div className="col-md-4">
+                <div className="col-md-1" style={styles.sendButton}>
                     <RaisedButton
                       label="Send"
                       type="submit"

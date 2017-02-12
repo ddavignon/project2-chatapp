@@ -28,18 +28,24 @@ class ChatMain extends Component {
                 "Alice", "Bob"
             ],
             text: 'Yo! sup',
-            user: "placeholder"
+            user: "placeholder",
         }
         
         this.handleMessageSubmit = this.handleMessageSubmit.bind(this);
+        this._messageRecieve = this._messageRecieve.bind(this);
     }
 
     componentDidMount() {
         Socket
-            .on('connect', function () {
+            .on('connect', function (count) {
                 console.log('Connecting to the server!');
             });
-
+        Socket.on('update', function(count){
+            console.log('update' + count.count);
+            // var {data} = this.props;
+            // data.push(count.count);
+            // this.setState({data});
+        });
         Socket.on('init', this._initialize);
         Socket.on('send:message', this._messageRecieve);
         Socket.on('user:join', this._userJoined);
@@ -53,6 +59,7 @@ class ChatMain extends Component {
     }
 
     _messageRecieve(message) {
+        console.log("message received! ")
         var {messages} = this.state;
         messages.push(message);
         this.setState({messages});
@@ -94,9 +101,9 @@ class ChatMain extends Component {
     }
 
     handleMessageSubmit(message) {
-        var {messages} = this.state;
-        messages.push(message);
-        this.setState({messages});
+        //var {messages} = this.state;
+        //messages.push(message);
+        //this.setState({messages});
         Socket.emit('send:message', message);
     }
 
@@ -104,7 +111,7 @@ class ChatMain extends Component {
         return (
             <div>
                 <div className="col-md-2">
-                  <UserList users={this.state.users}/>
+                  <UserList users={this.state.users} total={this.state.data}/>
                 </div>
                 <div className="col-md-10">
                   <MessageList messages={this.state.messages}/>

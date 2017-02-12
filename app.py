@@ -1,6 +1,9 @@
 import os
+import json
+import eventlet
+eventlet.monkey_patch()
 from flask import Flask, render_template
-from flask_socketio import SocketIO
+from flask_socketio import SocketIO, send
 # from flask_sqlalchemy import SQLAlchemy
 
 
@@ -23,12 +26,13 @@ def index():
     return render_template('index.html')#, messages=messages)
 
 #on connection
+connected=0
 @socketio.on('connect')
 def on_connect():
     print 'Someone connected!'
-    socketio.emit('update', {
-        'data': 'Got your connection!'
-    })
+    global connected
+    connected += 1
+    socketio.emit('update', { 'count': connected})
 
 @socketio.on('message')
 def handleMessage(message):
@@ -42,6 +46,7 @@ def handleMessage(message):
 @socketio.on('send:message')
 def sendMessage(message):
     print 'sent message', message
+    socketio.emit('send:message', message, broadcast=True)
 
 if __name__ == '__main__':
     socketio.run(
