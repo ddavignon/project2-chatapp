@@ -1,6 +1,7 @@
 import React, {Component} from 'react';
 import SocketIO from 'socket.io-client';
-import { Col } from 'react-bootstrap';
+import {Col, Row} from 'react-bootstrap';
+import axios from 'axios';
 
 import MessageBox from './MessageBox';
 import MessageList from './MessageList';
@@ -29,13 +30,21 @@ class ChatMain extends Component {
                 "Alice", "Bob"
             ],
             text: 'Yo! sup',
-            user: "placeholder",
+            user: "placeholder"
         }
-        
-        this.handleMessageSubmit = this.handleMessageSubmit.bind(this);
-        this._messageRecieve = this._messageRecieve.bind(this);
-        this._userJoined = this._userJoined.bind(this);
-        this._userLeft = this._userLeft.bind(this);
+
+        this.handleMessageSubmit = this
+            .handleMessageSubmit
+            .bind(this);
+        this._messageRecieve = this
+            ._messageRecieve
+            .bind(this);
+        this._userJoined = this
+            ._userJoined
+            .bind(this);
+        this._userLeft = this
+            ._userLeft
+            .bind(this);
     }
 
     componentDidMount() {
@@ -43,17 +52,18 @@ class ChatMain extends Component {
             .on('connect', function (count) {
                 console.log('Connecting to the server!');
             });
-        Socket.on('update', function(count){
+        Socket.on('update', function (count) {
             console.log('update' + count.count);
-            // var {data} = this.props;
-            // data.push(count.count);
-            // this.setState({data});
+            // var {data} = this.props; data.push(count.count); this.setState({data});
         });
         Socket.on('init', this._initialize);
         Socket.on('send:message', this._messageRecieve);
         Socket.on('user:join', this._userJoined);
         Socket.on('user:left', this._userLeft);
         Socket.on('change:name', this._userChangedName);
+        // const messages = axios.get('/chat');
+        // console.log('messages', messages);
+        
     }
 
     _initialize(data) {
@@ -97,33 +107,34 @@ class ChatMain extends Component {
         var index = users.indexOf(oldName);
         users.splice(index, 1, newName);
         messages.push({
-            user: 'APPLICATION BOT',
+            user: 'BOT BOT',
             text: 'Change Name : ' + oldName + ' ==> ' + newName
         });
         this.setState({users, messages});
     }
 
     handleMessageSubmit(message) {
-        //var {messages} = this.state;
-        //messages.push(message);
-        //this.setState({messages});
+        // var {messages} = this.state; messages.push(message);
+        // this.setState({messages});
         Socket.emit('send:message', message);
     }
 
     render() {
         const style = {
-            backgroundColor: 'black'
+            margin: "0 .5em"
         }
 
         return (
             <div className="chatMain">
-                <Col md={2}>
-                  <UserList users={this.state.users} total={this.state.data}/>
-                </Col>
-                <Col md={10}>
-                  <MessageList messages={this.state.messages} />
-                </Col>
-                <MessageBox onMessageSubmit={this.handleMessageSubmit} user={this.state.user} style={style} />
+                <Row style={style}>
+                    <Col md={2}>
+                        <UserList users={this.state.users} total={this.state.data}/>
+                    </Col>
+                    <Col md={10}>
+                        <MessageList messages={this.state.messages}/>
+                    </Col>
+                </Row>
+                <MessageBox onMessageSubmit={this.handleMessageSubmit} user={this.state.user}/>
             </div>
         )
     }

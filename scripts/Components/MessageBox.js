@@ -1,20 +1,20 @@
 import React, {Component} from 'react';
 import { Col } from 'react-bootstrap';
-import FloatingActionButton from 'material-ui/FloatingActionButton';
-import ContentSend from 'material-ui/svg-icons/content/send';
+// import FloatingActionButton from 'material-ui/FloatingActionButton';
+// import ContentSend from 'material-ui/svg-icons/content/send';
 import Paper from 'material-ui/Paper';
 import TextField from 'material-ui/TextField';
 
 const styles = {
     form: {
         position: 'fixed',
-        bottom: '0',
+        bottom: 0,
         width: '100%',
         backgroundColor: 'rgb(0,188,212)',
         padding: '20px'
     },
     messageBox: {
-        paddingLeft: '10px',
+        padding: '0 5px',
     },
     shadowBox: {
         paddingRight: '20px',
@@ -52,7 +52,7 @@ class MessageBox extends Component {
     render() {
         return (
         <form onSubmit={this.handleSubmit} style={styles.form} className="pull-right">
-                <Col md={9} mdOffset={2}>
+                <Col md={12} >
                     <Paper zDepth={2} style={styles.shadowBox}>
                     <TextField
                       name="messages"
@@ -65,11 +65,11 @@ class MessageBox extends Component {
                       />
                       </Paper>
                 </Col>
-                <Col md={1} >
+                {/*<Col md={1} >
                     <FloatingActionButton type="submit" secondary={true}>
                         <ContentSend />
                     </FloatingActionButton>
-                </Col>
+                </Col>*/}
             </form>
           );
     }
