@@ -1,5 +1,6 @@
 import React, {Component} from 'react';
 import SocketIO from 'socket.io-client';
+import { Col } from 'react-bootstrap';
 
 import MessageBox from './MessageBox';
 import MessageList from './MessageList';
@@ -115,14 +116,13 @@ class ChatMain extends Component {
         }
 
         return (
-            <div>
-                <div className="col-md-2">
+            <div className="chatMain">
+                <Col md={2}>
                   <UserList users={this.state.users} total={this.state.data}/>
-                </div>
-                <div className="col-md-10">
+                </Col>
+                <Col md={10}>
                   <MessageList messages={this.state.messages} />
-                </div>
-                
+                </Col>
                 <MessageBox onMessageSubmit={this.handleMessageSubmit} user={this.state.user} style={style} />
             </div>
         )

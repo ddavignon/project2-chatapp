@@ -13,7 +13,7 @@ class Message extends Component {
     render() {
         return (
             <div className='message'>
-                <Paper zDepth={1}>
+                <Paper zDepth={5}>
                     <ListItem
                         style={styles.messageItem}
                         leftAvatar={<Avatar src="" />}
