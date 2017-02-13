@@ -33,6 +33,8 @@ class ChatMain extends Component {
         
         this.handleMessageSubmit = this.handleMessageSubmit.bind(this);
         this._messageRecieve = this._messageRecieve.bind(this);
+        this._userJoined = this._userJoined.bind(this);
+        this._userLeft = this._userLeft.bind(this);
     }
 
     componentDidMount() {
@@ -70,7 +72,7 @@ class ChatMain extends Component {
         var {name} = data;
         users.push(name);
         messages.push({
-            user: 'APPLICATION BOT',
+            user: 'BOT BOT',
             text: name + ' Joined'
         });
         this.setState({users, messages});
@@ -82,7 +84,7 @@ class ChatMain extends Component {
         var index = users.indexOf(name);
         users.splice(index, 1);
         messages.push({
-            user: 'APPLICATION BOT',
+            user: 'BOT BOT',
             text: name + ' Left'
         });
         this.setState({users, messages});
@@ -108,6 +110,10 @@ class ChatMain extends Component {
     }
 
     render() {
+        const style = {
+            backgroundColor: 'black'
+        }
+
         return (
             <div>
                 <div className="col-md-2">
@@ -116,7 +122,8 @@ class ChatMain extends Component {
                 <div className="col-md-10">
                   <MessageList messages={this.state.messages} />
                 </div>
-                <MessageBox onMessageSubmit={this.handleMessageSubmit} user={this.state.user}/>
+                
+                <MessageBox onMessageSubmit={this.handleMessageSubmit} user={this.state.user} style={style} />
             </div>
         )
     }

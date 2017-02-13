@@ -17699,6 +17699,8 @@ var ChatMain = function (_Component) {
 
         _this.handleMessageSubmit = _this.handleMessageSubmit.bind(_this);
         _this._messageRecieve = _this._messageRecieve.bind(_this);
+        _this._userJoined = _this._userJoined.bind(_this);
+        _this._userLeft = _this._userLeft.bind(_this);
         return _this;
     }
 
@@ -17747,7 +17749,7 @@ var ChatMain = function (_Component) {
 
             users.push(name);
             messages.push({
-                user: 'APPLICATION BOT',
+                user: 'BOT BOT',
                 text: name + ' Joined'
             });
             this.setState({ users: users, messages: messages });
@@ -17763,7 +17765,7 @@ var ChatMain = function (_Component) {
             var index = users.indexOf(name);
             users.splice(index, 1);
             messages.push({
-                user: 'APPLICATION BOT',
+                user: 'BOT BOT',
                 text: name + ' Left'
             });
             this.setState({ users: users, messages: messages });
@@ -17796,6 +17798,10 @@ var ChatMain = function (_Component) {
     }, {
         key: 'render',
         value: function render() {
+            var style = {
+                backgroundColor: 'black'
+            };
+
             return _react2.default.createElement(
                 'div',
                 null,
@@ -17809,7 +17815,7 @@ var ChatMain = function (_Component) {
                     { className: 'col-md-10' },
                     _react2.default.createElement(_MessageList2.default, { messages: this.state.messages })
                 ),
-                _react2.default.createElement(_MessageBox2.default, { onMessageSubmit: this.handleMessageSubmit, user: this.state.user })
+                _react2.default.createElement(_MessageBox2.default, { onMessageSubmit: this.handleMessageSubmit, user: this.state.user, style: style })
             );
         }
     }]);
@@ -17938,14 +17944,17 @@ function _inherits(subClass, superClass) { if (typeof superClass !== "function" 
 var styles = {
     form: {
         position: 'fixed',
-        bottom: '20px',
-        width: '100%'
+        bottom: '0',
+        width: '100%',
+        backgroundColor: 'rgb(0,188,212)',
+        padding: '20px'
     },
     messageBox: {
         paddingLeft: '10px'
     },
     shadowBox: {
-        paddingRight: '20px'
+        paddingRight: '20px',
+        marginLeft: '20px'
     },
     sendButton: {
         paddingTop: '.5em'

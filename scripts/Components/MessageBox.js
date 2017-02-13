@@ -6,14 +6,17 @@ import TextField from 'material-ui/TextField';
 const styles = {
     form: {
         position: 'fixed',
-        bottom: '20px',
-        width: '100%'
+        bottom: '0',
+        width: '100%',
+        backgroundColor: 'rgb(0,188,212)',
+        padding: '20px'
     },
     messageBox: {
-        paddingLeft: '10px'
+        paddingLeft: '10px',
     },
     shadowBox: {
-        paddingRight: '20px'
+        paddingRight: '20px',
+        marginLeft: '20px'
     },
     sendButton: {
         paddingTop: '.5em',

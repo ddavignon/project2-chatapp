@@ -32,16 +32,16 @@ def on_connect():
     print 'Someone connected!'
     global connected
     connected += 1
+    socketio.emit('user:join', { 'name': 'another user'})
     socketio.emit('update', { 'count': connected})
 
-@socketio.on('message')
-def handleMessage(message):
-    print('Message' + message)
-    # message = ChatHistory(message=msg)
-    # db.session.add(message)
-    # db.session.commit()
-    
-    socketio.emit('message', {'data': 'got it!'})
+@socketio.on('disconnect', namespace='/chat')
+def on_disconnect():
+    print('Client disconnected')
+    global connected
+    connected -= 1
+    socketio.emit('user:left', { 'name': 'another user'})
+    socketio.emit('update', { 'count': connected})
 
 @socketio.on('send:message')
 def sendMessage(message):
