@@ -1,6 +1,6 @@
 import React, {Component} from 'react';
 import SocketIO from 'socket.io-client';
-import {Col, Row} from 'react-bootstrap';
+import {Grid, Col, Row} from 'react-bootstrap';
 import axios from 'axios';
 
 import MessageBox from './MessageBox';
@@ -16,12 +16,15 @@ class ChatMain extends Component {
         this.state = {
             messages: [
                 {
+                    img: "http://placehold.it/200x200",
                     user: "bob",
                     text: "hi"
                 }, {
+                    img: "http://placehold.it/200x200",
                     user: "Alice",
                     text: "Hey there bob"
                 }, {
+                    img: "http://placehold.it/200x200",
                     user: "Charlie",
                     text: "Has anyone seen Mac?"
                 }
@@ -30,7 +33,8 @@ class ChatMain extends Component {
                 "Alice", "Bob"
             ],
             text: 'Yo! sup',
-            user: "placeholder"
+            user: "placeholder",
+            usersConnected: "",
         }
 
         this.handleMessageSubmit = this
@@ -45,6 +49,12 @@ class ChatMain extends Component {
         this._userLeft = this
             ._userLeft
             .bind(this);
+        this._updateUsersConnected = this
+            ._updateUsersConnected
+            .bind(this)
+        this._loadMessages = this
+            ._loadMessages
+            .bind(this)
     }
 
     componentDidMount() {
@@ -52,13 +62,8 @@ class ChatMain extends Component {
             .on('connect', function () {
                 console.log('Connecting to the server!');
             });
-        Socket.on('event', function(message) {
-            console.log('messages', message); 
-        });
-        Socket.on('update', function (count) {
-            console.log('update' + count.count);
-            // var {data} = this.props; data.push(count.count); this.setState({data});
-        });
+        Socket.on('event', this._loadMessages);
+        Socket.on('update', this._updateUsersConnected);
         Socket.on('init', this._initialize);
         Socket.on('send:message', this._messageRecieve);
         Socket.on('user:join', this._userJoined);
@@ -67,6 +72,19 @@ class ChatMain extends Component {
         // const messages = axios.get('/chat');
         // console.log('messages', messages);
         
+    }
+    
+    _loadMessages(message) {
+        console.log('messages', message); 
+        //console.log('user', users)
+        var {messages} = this.state;
+        messages.push(message);
+        this.setState({messages});
+    }
+    
+    _updateUsersConnected(usersConnected) {
+        console.log('update ' + usersConnected);
+        this.setState({usersConnected});
     }
 
     _initialize(data) {
@@ -86,6 +104,7 @@ class ChatMain extends Component {
         var {name} = data;
         users.push(name);
         messages.push({
+            img: '../../static/bot.jpeg',
             user: 'BOT BOT',
             text: name + ' Joined'
         });
@@ -98,6 +117,7 @@ class ChatMain extends Component {
         var index = users.indexOf(name);
         users.splice(index, 1);
         messages.push({
+            img: '../../static/bot.jpeg',
             user: 'BOT BOT',
             text: name + ' Left'
         });
@@ -110,6 +130,7 @@ class ChatMain extends Component {
         var index = users.indexOf(oldName);
         users.splice(index, 1, newName);
         messages.push({
+            img: '../../static/bot.jpeg',
             user: 'BOT BOT',
             text: 'Change Name : ' + oldName + ' ==> ' + newName
         });
@@ -129,14 +150,16 @@ class ChatMain extends Component {
 
         return (
             <div className="chatMain">
-                <Row style={style}>
-                    <Col md={2}>
-                        <UserList users={this.state.users} total={this.state.data}/>
-                    </Col>
-                    <Col md={10}>
-                        <MessageList messages={this.state.messages}/>
-                    </Col>
-                </Row>
+                <Grid fluid>
+                    <Row style={style}>
+                        <Col md={2}>
+                            <UserList img={this.state.img} users={this.state.users} total={this.state.usersConnected}/>
+                        </Col>
+                        <Col md={10}>
+                            <MessageList messages={this.state.messages}/>
+                        </Col>
+                    </Row>
+                </Grid>
                 <MessageBox onMessageSubmit={this.handleMessageSubmit} user={this.state.user}/>
             </div>
         )

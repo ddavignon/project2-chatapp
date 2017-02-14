@@ -16,7 +16,7 @@ class Message extends Component {
                 <Paper zDepth={5}>
                     <ListItem
                         style={styles.messageItem}
-                        leftAvatar={<Avatar src="" />}
+                        leftAvatar={<Avatar src={this.props.img} />}
                         primaryText={this.props.user}
                         secondaryText={
                             <p>

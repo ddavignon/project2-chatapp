@@ -8,10 +8,11 @@ import Message from './Message';
 const styles = {
     messageList: {
         position: 'fixed',
-        maxHeight: '100%',
+        maxHeight: '86.5%',
         bottom: '8em',
         width: '100%',
-        overflow: 'auto'
+        overflow: 'auto',
+        marginTop: '100em'
     }
 }
 
@@ -26,7 +27,7 @@ class MessageList extends Component {
                             .props
                             .messages
                             .map((message, i) => {
-                                return (<Message key={i} user={message.user} text={message.text}/>);
+                                return (<Message key={i} img={message.img} user={message.user} text={message.text}/>);
                             })
 }
                     </Col>

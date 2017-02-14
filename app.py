@@ -16,6 +16,7 @@ db = SQLAlchemy(app)
 
 class History(db.Model):
      id = db.Column('id', db.Integer, primary_key=True)
+     user = db.Column('user', db.String(50))
      message = db.Column('message', db.String(500))
 
 # Route
@@ -23,32 +24,52 @@ class History(db.Model):
 def index():
     return render_template('index.html')#, messages=messages)
 
-#on connection
-connected=0
+# on connection
+totalUsersConnected=0
 @socketio.on('connect')
 def on_connect():
+    # count connected user
     print 'Someone connected!'
-    global connected
-    connected += 1
+    global totalUsersConnected
+    totalUsersConnected += 1
+    
+    # query the database
     data = History.query.all();
     for message in data:
-        socketio.emit('event', message.message)
-    socketio.emit('user:join', { 'name': 'another user'})
-    socketio.emit('update', { 'count': connected})
+        socketio.emit('event', {'user': message.user, 'text': message.message})
+    print data
+        
+        # notify of user connected    
+        #socketio.emit('user:join', { 'name': message.user})
+    
+    # update total connected users
+    socketio.emit('update', totalUsersConnected)
 
+# on disconnnect
 @socketio.on('disconnect')
 def on_disconnect():
+    # remove user from count
     print('Client disconnected')
-    global connected
-    connected -= 1
-    socketio.emit('user:left', { 'name': 'another user'})
-    socketio.emit('update', { 'count': connected})
+    global totalUsersConnected
+    totalUsersConnected -= 1
 
+    # nofify of user disconnect
+    socketio.emit('user:left', { 'name': 'userLeftPlaceholder'})
+    
+    # update total connected users
+    socketio.emit('update', totalUsersConnected)
+
+# on send message
 @socketio.on('send:message')
 def sendMessage(msg):
+    # console log message
     print 'sent message', msg['text']
+    
+    # broadcast message to main chatroom
     socketio.emit('send:message', msg, broadcast=True)
-    message = History(message=msg['text'])
+    
+    # add message to database
+    message = History(user="dbPlaceHolder", message=msg['text'])
     db.session.add(message)
     db.session.commit()
 
