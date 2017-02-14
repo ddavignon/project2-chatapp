@@ -5,8 +5,6 @@ import Divider from 'material-ui/Divider';
 import AppBar from 'material-ui/AppBar';
 import MenuItem from 'material-ui/MenuItem';
 
-import { Socket } from './Socket';
-
 import ChatMain from './Components/ChatMain';
 
 const styles =  {

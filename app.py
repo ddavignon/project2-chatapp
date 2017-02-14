@@ -2,7 +2,7 @@ import os
 import json
 import eventlet
 eventlet.monkey_patch()
-from flask import Flask, render_template
+from flask import Flask, render_template, jsonify
 from flask_socketio import SocketIO, send
 from flask_sqlalchemy import SQLAlchemy
 
@@ -11,14 +11,12 @@ app = Flask(__name__)
 app.config['SECRET_KEY'] = 'Sup3rC00lS3cr3+!'
 socketio = SocketIO(app)
 
-app.config['SQLALCHEMY_DATABASE_URI'] = 'postgresql://localhost'
+app.config['SQLALCHEMY_DATABASE_URI'] = 'postgresql://ubuntu:chat@localhost/chat'
 db = SQLAlchemy(app)
 
 class History(db.Model):
      id = db.Column('id', db.Integer, primary_key=True)
      message = db.Column('message', db.String(500))
-
-
 
 # Route
 @app.route('/')
@@ -32,6 +30,9 @@ def on_connect():
     print 'Someone connected!'
     global connected
     connected += 1
+    data = History.query.all();
+    for message in data:
+        socketio.emit('event', message.message)
     socketio.emit('user:join', { 'name': 'another user'})
     socketio.emit('update', { 'count': connected})
 
@@ -47,7 +48,7 @@ def on_disconnect():
 def sendMessage(msg):
     print 'sent message', msg['text']
     socketio.emit('send:message', msg, broadcast=True)
-    message = History(message=json.loads(msg['text']))
+    message = History(message=msg['text'])
     db.session.add(message)
     db.session.commit()
 

@@ -18,7 +18,7 @@ class UserList extends Component {
               
                 <List>
                     <Paper zDepth={3} style={styles.paper}>
-                    <Subheader>Online Users: {this.props.total}</Subheader>
+                        <Subheader>Online Users: {this.props.total}</Subheader>
                     </Paper>   
                      <Paper zDepth={2} style={styles.paper}>
                     {

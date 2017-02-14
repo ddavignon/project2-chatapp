@@ -49,9 +49,12 @@ class ChatMain extends Component {
 
     componentDidMount() {
         Socket
-            .on('connect', function (count) {
+            .on('connect', function () {
                 console.log('Connecting to the server!');
             });
+        Socket.on('event', function(message) {
+            console.log('messages', message); 
+        });
         Socket.on('update', function (count) {
             console.log('update' + count.count);
             // var {data} = this.props; data.push(count.count); this.setState({data});
