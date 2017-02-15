@@ -1,7 +1,7 @@
 import app
 from flask_sqlalchemy import SQLAlchemy
 
-app.app.config['SQLALCHEMY_DATABASE_URI'] = 'postgresql://dustin:potato@localhost/postgres'#os.environ['DATABASE_URL']#'postgresql://ubuntu:chat@localhost/chat'#
+app.app.config['SQLALCHEMY_DATABASE_URI'] = os.environ('DATABASE_URL')#'postgresql://dustin:potato@localhost/postgres'
 db = SQLAlchemy(app.app)
 
 class History(db.Model):
