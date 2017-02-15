@@ -40,20 +40,20 @@ class ChatMain extends Component {
         this.handleMessageSubmit = this
             .handleMessageSubmit
             .bind(this);
-        this._messageRecieve = this
-            ._messageRecieve
+        this.messageRecieve = this
+            .messageRecieve
             .bind(this);
-        this._userJoined = this
-            ._userJoined
+        this.userJoined = this
+            .userJoined
             .bind(this);
-        this._userLeft = this
-            ._userLeft
+        this.userLeft = this
+            .userLeft
             .bind(this);
-        this._updateUsersConnected = this
-            ._updateUsersConnected
+        this.updateUsersConnected = this
+            .updateUsersConnected
             .bind(this)
-        this._loadMessages = this
-            ._loadMessages
+        this.loadMessages = this
+            .loadMessages
             .bind(this)
     }
 
@@ -62,44 +62,46 @@ class ChatMain extends Component {
             .on('connect', function () {
                 console.log('Connecting to the server!');
             });
-        Socket.on('event', this._loadMessages);
-        Socket.on('update', this._updateUsersConnected);
-        Socket.on('init', this._initialize);
-        Socket.on('send:message', this._messageRecieve);
-        Socket.on('user:join', this._userJoined);
-        Socket.on('user:left', this._userLeft);
-        Socket.on('change:name', this._userChangedName);
+        Socket.on('event', this.loadMessages);
+        Socket.on('update', this.updateUsersConnected);
+        Socket.on('init', this.initialize);
+        Socket.on('send:message', this.messageRecieve);
+        Socket.on('user:join', this.userJoined);
+        Socket.on('user:left', this.userLeft);
         // const messages = axios.get('/chat');
         // console.log('messages', messages);
         
     }
     
-    _loadMessages(message) {
-        console.log('messages', message); 
+    loadMessages(message) {
         //console.log('user', users)
         var {messages} = this.state;
-        messages.push(message);
+        console.log('messages', message); 
+        for (var data of message) {
+            console.log(data);
+            messages.push(data);
+        } 
         this.setState({messages});
     }
     
-    _updateUsersConnected(usersConnected) {
+    updateUsersConnected(usersConnected) {
         console.log('update ' + usersConnected);
         this.setState({usersConnected});
     }
 
-    _initialize(data) {
+    initialize(data) {
         var {users, name} = data;
         this.setState({users, user: name});
     }
 
-    _messageRecieve(message) {
+    messageRecieve(message) {
         console.log("message received! ")
         var {messages} = this.state;
         messages.push(message);
         this.setState({messages});
     }
 
-    _userJoined(data) {
+    userJoined(data) {
         var {users, messages} = this.state;
         var {name} = data;
         users.push(name);
@@ -111,7 +113,7 @@ class ChatMain extends Component {
         this.setState({users, messages});
     }
 
-    _userLeft(data) {
+    userLeft(data) {
         var {users, messages} = this.state;
         var {name} = data;
         var index = users.indexOf(name);
@@ -120,19 +122,6 @@ class ChatMain extends Component {
             img: '../../static/bot.jpeg',
             user: 'BOT BOT',
             text: name + ' Left'
-        });
-        this.setState({users, messages});
-    }
-
-    _userChangedName(data) {
-        var {oldName, newName} = data;
-        var {users, messages} = this.state;
-        var index = users.indexOf(oldName);
-        users.splice(index, 1, newName);
-        messages.push({
-            img: '../../static/bot.jpeg',
-            user: 'BOT BOT',
-            text: 'Change Name : ' + oldName + ' ==> ' + newName
         });
         this.setState({users, messages});
     }

@@ -26275,11 +26275,11 @@ var ChatMain = function (_Component) {
         };
 
         _this.handleMessageSubmit = _this.handleMessageSubmit.bind(_this);
-        _this._messageRecieve = _this._messageRecieve.bind(_this);
-        _this._userJoined = _this._userJoined.bind(_this);
-        _this._userLeft = _this._userLeft.bind(_this);
-        _this._updateUsersConnected = _this._updateUsersConnected.bind(_this);
-        _this._loadMessages = _this._loadMessages.bind(_this);
+        _this.messageRecieve = _this.messageRecieve.bind(_this);
+        _this.userJoined = _this.userJoined.bind(_this);
+        _this.userLeft = _this.userLeft.bind(_this);
+        _this.updateUsersConnected = _this.updateUsersConnected.bind(_this);
+        _this.loadMessages = _this.loadMessages.bind(_this);
         return _this;
     }
 
@@ -26289,43 +26289,67 @@ var ChatMain = function (_Component) {
             Socket.on('connect', function () {
                 console.log('Connecting to the server!');
             });
-            Socket.on('event', this._loadMessages);
-            Socket.on('update', this._updateUsersConnected);
-            Socket.on('init', this._initialize);
-            Socket.on('send:message', this._messageRecieve);
-            Socket.on('user:join', this._userJoined);
-            Socket.on('user:left', this._userLeft);
-            Socket.on('change:name', this._userChangedName);
+            Socket.on('event', this.loadMessages);
+            Socket.on('update', this.updateUsersConnected);
+            Socket.on('init', this.initialize);
+            Socket.on('send:message', this.messageRecieve);
+            Socket.on('user:join', this.userJoined);
+            Socket.on('user:left', this.userLeft);
             // const messages = axios.get('/chat');
             // console.log('messages', messages);
         }
     }, {
-        key: '_loadMessages',
-        value: function _loadMessages(message) {
-            console.log('messages', message);
+        key: 'loadMessages',
+        value: function loadMessages(message) {
             //console.log('user', users)
             var messages = this.state.messages;
 
-            messages.push(message);
+            console.log('messages', message);
+            var _iteratorNormalCompletion = true;
+            var _didIteratorError = false;
+            var _iteratorError = undefined;
+
+            try {
+                for (var _iterator = message[Symbol.iterator](), _step; !(_iteratorNormalCompletion = (_step = _iterator.next()).done); _iteratorNormalCompletion = true) {
+                    var data = _step.value;
+
+                    console.log(data);
+                    messages.push(data);
+                }
+            } catch (err) {
+                _didIteratorError = true;
+                _iteratorError = err;
+            } finally {
+                try {
+                    if (!_iteratorNormalCompletion && _iterator.return) {
+                        _iterator.return();
+                    }
+                } finally {
+                    if (_didIteratorError) {
+                        throw _iteratorError;
+                    }
+                }
+            }
+
             this.setState({ messages: messages });
         }
     }, {
-        key: '_updateUsersConnected',
-        value: function _updateUsersConnected(usersConnected) {
+        key: 'updateUsersConnected',
+        value: function updateUsersConnected(usersConnected) {
             console.log('update ' + usersConnected);
             this.setState({ usersConnected: usersConnected });
         }
     }, {
-        key: '_initialize',
-        value: function _initialize(data) {
+        key: 'initialize',
+        value: function initialize(data) {
             var users = data.users,
                 name = data.name;
 
             this.setState({ users: users, user: name });
         }
     }, {
-        key: '_messageRecieve',
-        value: function _messageRecieve(message) {
+        key: 'messageRecieve',
+        value: function messageRecieve(message) {
             console.log("message received! ");
             var messages = this.state.messages;
 
@@ -26333,8 +26357,8 @@ var ChatMain = function (_Component) {
             this.setState({ messages: messages });
         }
     }, {
-        key: '_userJoined',
-        value: function _userJoined(data) {
+        key: 'userJoined',
+        value: function userJoined(data) {
             var _state = this.state,
                 users = _state.users,
                 messages = _state.messages;
@@ -26349,8 +26373,8 @@ var ChatMain = function (_Component) {
             this.setState({ users: users, messages: messages });
         }
     }, {
-        key: '_userLeft',
-        value: function _userLeft(data) {
+        key: 'userLeft',
+        value: function userLeft(data) {
             var _state2 = this.state,
                 users = _state2.users,
                 messages = _state2.messages;
@@ -26362,24 +26386,6 @@ var ChatMain = function (_Component) {
                 img: '../../static/bot.jpeg',
                 user: 'BOT BOT',
                 text: name + ' Left'
-            });
-            this.setState({ users: users, messages: messages });
-        }
-    }, {
-        key: '_userChangedName',
-        value: function _userChangedName(data) {
-            var oldName = data.oldName,
-                newName = data.newName;
-            var _state3 = this.state,
-                users = _state3.users,
-                messages = _state3.messages;
-
-            var index = users.indexOf(oldName);
-            users.splice(index, 1, newName);
-            messages.push({
-                img: '../../static/bot.jpeg',
-                user: 'BOT BOT',
-                text: 'Change Name : ' + oldName + ' ==> ' + newName
             });
             this.setState({ users: users, messages: messages });
         }
@@ -26465,7 +26471,7 @@ function _inherits(subClass, superClass) { if (typeof superClass !== "function" 
 
 var styles = {
     messageItem: {
-        margin: '.3em 0'
+        margin: '0'
     }
 };
 

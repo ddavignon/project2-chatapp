@@ -11,6 +11,7 @@
     "material-ui": "^0.16.7",
     "react": "^15.4.2",
     "react-bootstrap": "^0.30.7",
+    "react-chatview": "^0.1.1",
     "react-dom": "^15.4.2",
     "react-tap-event-plugin": "^2.0.1",
     "socket.io-client": "^1.7.2",

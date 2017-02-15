@@ -11,7 +11,7 @@ app = Flask(__name__)
 app.config['SECRET_KEY'] = 'Sup3rC00lS3cr3+!'
 socketio = SocketIO(app)
 
-app.config['SQLALCHEMY_DATABASE_URI'] = 'postgresql://ubuntu:chat@localhost/chat'
+app.config['SQLALCHEMY_DATABASE_URI'] = 'postgresql://ubuntu:chat@localhost/chat'#os.environ['DATABASE_URL']#'postgresql://ubuntu:chat@localhost/chat'
 db = SQLAlchemy(app)
 
 class History(db.Model):
@@ -35,8 +35,8 @@ def on_connect():
     
     # query the database
     data = History.query.all();
-    for message in data:
-        socketio.emit('event', {'user': message.user, 'text': message.message})
+    all_messages = [{'user': x.user, 'text': x.message}  for x in data]
+    socketio.emit('event', all_messages)
     print data
         
         # notify of user connected    
