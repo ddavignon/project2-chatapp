@@ -1,4 +1,4 @@
-import app
+import os, app
 from flask_sqlalchemy import SQLAlchemy
 
 app.app.config['SQLALCHEMY_DATABASE_URI'] = os.environ('DATABASE_URL')#'postgresql://dustin:potato@localhost/postgres'
