@@ -11,13 +11,7 @@ app = Flask(__name__)
 app.config['SECRET_KEY'] = 'Sup3rC00lS3cr3+!'
 socketio = SocketIO(app)
 
-app.config['SQLALCHEMY_DATABASE_URI'] = 'postgresql://ubuntu:chat@localhost/chat'#os.environ['DATABASE_URL']#'postgresql://ubuntu:chat@localhost/chat'
-db = SQLAlchemy(app)
-
-class History(db.Model):
-     id = db.Column('id', db.Integer, primary_key=True)
-     user = db.Column('user', db.String(50))
-     message = db.Column('message', db.String(500))
+import models
 
 # Route
 @app.route('/')
@@ -34,8 +28,8 @@ def on_connect():
     totalUsersConnected += 1
     
     # query the database
-    data = History.query.all();
-    all_messages = [{'user': x.user, 'text': x.message}  for x in data]
+    data = models.History.query.all();
+    all_messages = [{'img': x.img, 'user': x.user, 'text': x.message}  for x in data]
     socketio.emit('event', all_messages)
     print data
         
@@ -54,7 +48,7 @@ def on_disconnect():
     totalUsersConnected -= 1
 
     # nofify of user disconnect
-    socketio.emit('user:left', { 'name': 'userLeftPlaceholder'})
+    socketio.emit('user:left', { 'name': 'userPlaceholder'})
     
     # update total connected users
     socketio.emit('update', totalUsersConnected)
@@ -63,15 +57,16 @@ def on_disconnect():
 @socketio.on('send:message')
 def sendMessage(msg):
     # console log message
-    print 'sent message', msg['text']
+    print msg
+    print 'sent message', msg['img'], msg['user'], msg['text']
     
     # broadcast message to main chatroom
     socketio.emit('send:message', msg, broadcast=True)
     
     # add message to database
-    message = History(user="dbPlaceHolder", message=msg['text'])
-    db.session.add(message)
-    db.session.commit()
+    text = models.History(msg['img'], msg['user'], msg['text'])
+    models.db.session.add(text)
+    models.db.session.commit()
 
 if __name__ == '__main__':
     socketio.run(

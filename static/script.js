@@ -26589,6 +26589,7 @@ var MessageBox = function (_Component) {
         value: function handleSubmit(e) {
             e.preventDefault();
             var message = {
+                "img": "img-holder",
                 "user": this.props.user,
                 "text": this.state.text
             };

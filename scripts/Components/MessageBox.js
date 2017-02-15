@@ -36,6 +36,7 @@ class MessageBox extends Component {
     handleSubmit(e) {
         e.preventDefault();
         var message = {
+            "img" : "img-holder",
             "user": this.props.user,
             "text": this.state.text
         }
