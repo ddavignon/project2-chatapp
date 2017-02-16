@@ -14,25 +14,11 @@ class ChatMain extends Component {
     constructor(props) {
         super(props);
         this.state = {
-            messages: [
-                {
-                    img: "http://placehold.it/200x200",
-                    user: "bob",
-                    text: "hi"
-                }, {
-                    img: "http://placehold.it/200x200",
-                    user: "Alice",
-                    text: "Hey there bob"
-                }, {
-                    img: "http://placehold.it/200x200",
-                    user: "Charlie",
-                    text: "Has anyone seen Mac?"
-                }
-            ],
+            messages: [],
             users: [
                 "Alice", "Bob"
             ],
-            text: 'Yo! sup',
+            text: '',
             user: "placeholder",
             usersConnected: "",
         }
@@ -55,6 +41,8 @@ class ChatMain extends Component {
         this.loadMessages = this
             .loadMessages
             .bind(this)
+            
+        Socket.emit('get:messages');
     }
 
     componentDidMount() {
@@ -62,7 +50,7 @@ class ChatMain extends Component {
             .on('connect', function () {
                 console.log('Connecting to the server!');
             });
-        Socket.on('event', this.loadMessages);
+        Socket.once('event', this.loadMessages);
         Socket.on('update', this.updateUsersConnected);
         Socket.on('init', this.initialize);
         Socket.on('send:message', this.messageRecieve);
@@ -140,8 +128,8 @@ class ChatMain extends Component {
         return (
             <div className="chatMain">
                 <Grid fluid>
-                    <Row style={style}>
-                        <Col md={2}>
+                    <Row style={style} >
+                       <Col md={2}>
                             <UserList img={this.state.img} users={this.state.users} total={this.state.usersConnected}/>
                         </Col>
                         <Col md={10}>

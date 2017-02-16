@@ -1,36 +1,31 @@
 import React, {Component} from 'react';
-import {Col} from 'react-bootstrap';
 import {List} from 'material-ui/List';
-import Paper from 'material-ui/Paper';
-import Subheader from 'material-ui/Subheader';
 
 import Message from './Message';
 const styles = {
     messageList: {
         position: 'fixed',
-        maxHeight: '86.5%',
-        bottom: '8em',
-        width: '100%',
+        maxHeight: '90%',
+        width: '80%',
+        bottom: '6.25em',
         overflow: 'auto',
-        marginTop: '100em'
+        backgroundColor: 'rgb(255,64,129)',
+        padding: '1em'
     }
 }
 
 class MessageList extends Component {
-
     render() {
         return (
             <div className='messages'>
                 <List style={styles.messageList}>
-                    <Col xs={11} md={9}>
-                        {this
-                            .props
-                            .messages
-                            .map((message, i) => {
-                                return (<Message key={i} img={message.img} user={message.user} text={message.text}/>);
-                            })
-}
-                    </Col>
+                {this
+                    .props
+                    .messages
+                    .map((message, i) => {
+                        return (<Message key={i} img={message.img} user={message.user} text={message.text}/>);
+                    })
+                }
                 </List>
             </div>
         );

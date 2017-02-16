@@ -26,16 +26,6 @@ def on_connect():
     print 'Someone connected!'
     global totalUsersConnected
     totalUsersConnected += 1
-    
-    # query the database
-    data = models.History.query.all();
-    all_messages = [{'img': x.img, 'user': x.user, 'text': x.message}  for x in data]
-    socketio.emit('event', all_messages)
-    print data
-        
-        # notify of user connected    
-        #socketio.emit('user:join', { 'name': message.user})
-    
     # update total connected users
     socketio.emit('update', totalUsersConnected)
 
@@ -46,27 +36,34 @@ def on_disconnect():
     print('Client disconnected')
     global totalUsersConnected
     totalUsersConnected -= 1
-
     # nofify of user disconnect
     socketio.emit('user:left', { 'name': 'userPlaceholder'})
-    
     # update total connected users
     socketio.emit('update', totalUsersConnected)
+    
+
+# get messages
+@socketio.on('get:messages')
+def get_messages():
+    print "serving messsages to user"
+    # query the database
+    data = models.History.query.all();
+    all_messages = [{'img': x.img, 'user': x.user, 'text': x.message}  for x in data]
+    socketio.emit('event', all_messages)
+
 
 # on send message
 @socketio.on('send:message')
 def sendMessage(msg):
     # console log message
-    print msg
     print 'sent message', msg['img'], msg['user'], msg['text']
-    
     # broadcast message to main chatroom
     socketio.emit('send:message', msg, broadcast=True)
-    
     # add message to database
     text = models.History(msg['img'], msg['user'], msg['text'])
     models.db.session.add(text)
     models.db.session.commit()
+    models.db.session.close()
 
 if __name__ == '__main__':
     socketio.run(

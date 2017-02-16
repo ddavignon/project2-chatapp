@@ -5,7 +5,7 @@ import Paper from 'material-ui/Paper';
 
 const styles = {
     messageItem: {
-        margin: '0'
+        margin: '.5em'
     }
 }
 

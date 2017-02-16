@@ -26255,21 +26255,9 @@ var ChatMain = function (_Component) {
         var _this = _possibleConstructorReturn(this, (ChatMain.__proto__ || Object.getPrototypeOf(ChatMain)).call(this, props));
 
         _this.state = {
-            messages: [{
-                img: "http://placehold.it/200x200",
-                user: "bob",
-                text: "hi"
-            }, {
-                img: "http://placehold.it/200x200",
-                user: "Alice",
-                text: "Hey there bob"
-            }, {
-                img: "http://placehold.it/200x200",
-                user: "Charlie",
-                text: "Has anyone seen Mac?"
-            }],
+            messages: [],
             users: ["Alice", "Bob"],
-            text: 'Yo! sup',
+            text: '',
             user: "placeholder",
             usersConnected: ""
         };
@@ -26280,6 +26268,8 @@ var ChatMain = function (_Component) {
         _this.userLeft = _this.userLeft.bind(_this);
         _this.updateUsersConnected = _this.updateUsersConnected.bind(_this);
         _this.loadMessages = _this.loadMessages.bind(_this);
+
+        Socket.emit('get:messages');
         return _this;
     }
 
@@ -26289,7 +26279,7 @@ var ChatMain = function (_Component) {
             Socket.on('connect', function () {
                 console.log('Connecting to the server!');
             });
-            Socket.on('event', this.loadMessages);
+            Socket.once('event', this.loadMessages);
             Socket.on('update', this.updateUsersConnected);
             Socket.on('init', this.initialize);
             Socket.on('send:message', this.messageRecieve);
@@ -26471,7 +26461,7 @@ function _inherits(subClass, superClass) { if (typeof superClass !== "function" 
 
 var styles = {
     messageItem: {
-        margin: '0'
+        margin: '.5em'
     }
 };
 
@@ -26650,17 +26640,7 @@ var _react = __webpack_require__(0);
 
 var _react2 = _interopRequireDefault(_react);
 
-var _reactBootstrap = __webpack_require__(154);
-
 var _List = __webpack_require__(126);
-
-var _Paper = __webpack_require__(45);
-
-var _Paper2 = _interopRequireDefault(_Paper);
-
-var _Subheader = __webpack_require__(127);
-
-var _Subheader2 = _interopRequireDefault(_Subheader);
 
 var _Message = __webpack_require__(346);
 
@@ -26677,11 +26657,12 @@ function _inherits(subClass, superClass) { if (typeof superClass !== "function" 
 var styles = {
     messageList: {
         position: 'fixed',
-        maxHeight: '86.5%',
-        bottom: '8em',
-        width: '100%',
+        maxHeight: '90%',
+        width: '80%',
+        bottom: '6.25em',
         overflow: 'auto',
-        marginTop: '100em'
+        backgroundColor: 'rgb(255,64,129)',
+        padding: '1em'
     }
 };
 
@@ -26703,13 +26684,9 @@ var MessageList = function (_Component) {
                 _react2.default.createElement(
                     _List.List,
                     { style: styles.messageList },
-                    _react2.default.createElement(
-                        _reactBootstrap.Col,
-                        { xs: 11, md: 9 },
-                        this.props.messages.map(function (message, i) {
-                            return _react2.default.createElement(_Message2.default, { key: i, img: message.img, user: message.user, text: message.text });
-                        })
-                    )
+                    this.props.messages.map(function (message, i) {
+                        return _react2.default.createElement(_Message2.default, { key: i, img: message.img, user: message.user, text: message.text });
+                    })
                 )
             );
         }
