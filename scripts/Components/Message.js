@@ -10,6 +10,8 @@ const styles = {
 }
 
 class Message extends Component {
+    
+    
     render() {
         return (
             <div className='message'>

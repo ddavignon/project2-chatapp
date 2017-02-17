@@ -1,6 +1,4 @@
-import os
-import json
-import re
+import os, json, re, requests
 import eventlet
 eventlet.monkey_patch()
 from flask import Flask, render_template, jsonify
@@ -60,12 +58,17 @@ botSignal = re.compile('[!!]')
 @socketio.on('send:message')
 def sendMessage(msg):
     # console log message
-    print 'sent message', msg['img'], msg['user'], msg['text']
+    print msg
+    print msg['facebook_user_token']
+    response = requests.get('https://graph.facebook.com/v2.8/me?fields=id%2Cname%2Cpicture&access_token=' + msg['facebook_user_token'])
+    json = response.json()
+    user = { 'img' : json['picture']['data']['url'], 'user': json['name'] }
+    print 'sent message', msg['message']['text'], user['img'], user['user']
     
-    if re.match(botSignal, msg['text'].strip()[:2]):
+    if re.match(botSignal, msg['message']['text'].strip()[:2]):
         print 'bot!'
         try:
-            botCommand = msg['text'].split()[1]
+            botCommand = msg['message']['text'].split()[1]
             if 'about' in botCommand:
                 print 'about'
                 socketio.emit('about')
@@ -74,20 +77,30 @@ def sendMessage(msg):
                 socketio.emit('help')
             elif 'say' in botCommand:
                 print 'say'
-                socketio.emit('say', msg['text'].replace('!! say ', '' ))
+                socketio.emit('say', msg['message']['text'].replace('!! say ', '' ))
             else:
                 socketio.emit('say', 'What do you mean? Try using !! help.')
         except:
             socketio.emit('say', 'are you sure about that last message?')
     else:
         # broadcast message to main chatroom
-        socketio.emit('send:message', msg, broadcast=True)
+        socketio.emit('send:message', {'text':msg['message']['text'], 'img':user['img'], 'user':user['user']}, broadcast=True)
         # add message to database
-        text = models.History(msg['img'], msg['user'], msg['text'])
+        text = models.History(user['img'], user['user'], msg['message']['text'])
         models.db.session.add(text)
         models.db.session.commit()
         models.db.session.close()
-
+        
+@socketio.on('FB-user')
+def FB_user(data):
+    print data['facebook_user_token']
+    response = requests.get('https://graph.facebook.com/v2.8/me?fields=id%2Cname%2Cpicture&access_token=' + data['facebook_user_token'])
+    json = response.json()
+    user = { 'img' : json['picture']['data']['url'], 'user': json['name'] }
+    print user
+    socketio.emit('init', user);
+    
+    
 if __name__ == '__main__':
     socketio.run(
         app,

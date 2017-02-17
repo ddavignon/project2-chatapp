@@ -1,7 +1,5 @@
 import React, {Component} from 'react';
 import { Col } from 'react-bootstrap';
-// import FloatingActionButton from 'material-ui/FloatingActionButton';
-// import ContentSend from 'material-ui/svg-icons/content/send';
 import Paper from 'material-ui/Paper';
 import TextField from 'material-ui/TextField';
 
@@ -36,7 +34,6 @@ class MessageBox extends Component {
     handleSubmit(e) {
         e.preventDefault();
         var message = {
-            "img" : "img-holder",
             "user": this.props.user,
             "text": this.state.text
         }
@@ -66,11 +63,6 @@ class MessageBox extends Component {
                       />
                       </Paper>
                 </Col>
-                {/*<Col md={1} >
-                    <FloatingActionButton type="submit" secondary={true}>
-                        <ContentSend />
-                    </FloatingActionButton>
-                </Col>*/}
             </form>
           );
     }

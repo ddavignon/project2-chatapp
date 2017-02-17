@@ -27,7 +27,7 @@ class ChatMain extends Component {
                 "Alice", "Bob"
             ],
             text: '',
-            user: "placeholder",
+            user: ['img':'','user':''],
             usersConnected: "",
         }
 
@@ -101,21 +101,21 @@ class ChatMain extends Component {
 
     initialize(data) {
         var {
-            users,
-            name
+            user
         } = data;
-        this.setState({
-            users,
-            user: name
-        });
+        // this.setState({
+        //     users,
+        //     user: name
+        // });
     }
 
-    messageRecieve(message) {
+    messageRecieve(data) {
         console.log("message received! ")
+        console.log(data)
         var {
             messages
         } = this.state;
-        messages.push(message);
+        messages.push(data);
         this.setState({
             messages
         });
@@ -134,7 +134,7 @@ class ChatMain extends Component {
             messages
         });
     }
-    
+
     botHelp() {
         var {
             messages
@@ -148,7 +148,7 @@ class ChatMain extends Component {
             messages
         });
     }
-    
+
     botSay(data) {
         var {
             messages
@@ -207,7 +207,14 @@ class ChatMain extends Component {
     handleMessageSubmit(message) {
         // var {messages} = this.state; messages.push(message);
         // this.setState({messages});
-        Socket.emit('send:message', message);
+        FB.getLoginStatus((response) => {
+          if (response.status == 'connected') {
+            Socket.emit('send:message', {
+              'facebook_user_token': response.authResponse.accessToken,
+              'message' :message
+            });
+        }
+    });
     }
 
     render() {

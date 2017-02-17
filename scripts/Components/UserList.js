@@ -8,6 +8,12 @@ import CommunicationChatBubble from 'material-ui/svg-icons/communication/chat-bu
 const styles = {
     paper: {
         margin: '1em 0'
+    },
+    sidePanel: {
+        position: 'fixed',
+        top: '5em',
+        left: '2em',
+        overflow: 'scroll'
     }
 }
 
@@ -16,7 +22,7 @@ class UserList extends Component {
       return (
           <div className='users'>
               
-                <List>
+                <List style={styles.sidePanel}>
                     <Paper zDepth={3} style={styles.paper}>
                         <Subheader>Online Users: {this.props.total}</Subheader>
                     </Paper>   
