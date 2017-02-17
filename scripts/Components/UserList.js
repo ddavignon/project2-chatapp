@@ -30,7 +30,7 @@ class UserList extends Component {
                                 leftAvatar={<Avatar src="" />}
                                 rightIcon={<CommunicationChatBubble />}
                                 />
-                            );
+                            )
                         })
                     }
                      </Paper>  

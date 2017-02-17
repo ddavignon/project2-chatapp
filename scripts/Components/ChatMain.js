@@ -1,6 +1,14 @@
-import React, {Component} from 'react';
+import React, {
+    Component
+}
+from 'react';
 import SocketIO from 'socket.io-client';
-import {Grid, Col, Row} from 'react-bootstrap';
+import {
+    Grid,
+    Col,
+    Row
+}
+from 'react-bootstrap';
 import axios from 'axios';
 
 import MessageBox from './MessageBox';
@@ -37,17 +45,21 @@ class ChatMain extends Component {
             .bind(this);
         this.updateUsersConnected = this
             .updateUsersConnected
-            .bind(this)
+            .bind(this);
         this.loadMessages = this
             .loadMessages
-            .bind(this)
-            
+            .bind(this);
+        this.botAbout = this.botAbout.bind(this);
+        this.botHelp = this.botHelp.bind(this);
+        this.botSay = this.botSay.bind(this);
+
+
         Socket.emit('get:messages');
     }
 
     componentDidMount() {
         Socket
-            .on('connect', function () {
+            .on('connect', function() {
                 console.log('Connecting to the server!');
             });
         Socket.once('event', this.loadMessages);
@@ -56,62 +68,140 @@ class ChatMain extends Component {
         Socket.on('send:message', this.messageRecieve);
         Socket.on('user:join', this.userJoined);
         Socket.on('user:left', this.userLeft);
+        Socket.on('about', this.botAbout);
+        Socket.on('help', this.botHelp);
+        Socket.on('say', this.botSay);
+
         // const messages = axios.get('/chat');
         // console.log('messages', messages);
-        
+
     }
-    
+
     loadMessages(message) {
         //console.log('user', users)
-        var {messages} = this.state;
-        console.log('messages', message); 
+        var {
+            messages
+        } = this.state;
+        console.log('messages', message);
         for (var data of message) {
             console.log(data);
             messages.push(data);
-        } 
-        this.setState({messages});
+        }
+        this.setState({
+            messages
+        });
     }
-    
+
     updateUsersConnected(usersConnected) {
         console.log('update ' + usersConnected);
-        this.setState({usersConnected});
+        this.setState({
+            usersConnected
+        });
     }
 
     initialize(data) {
-        var {users, name} = data;
-        this.setState({users, user: name});
+        var {
+            users,
+            name
+        } = data;
+        this.setState({
+            users,
+            user: name
+        });
     }
 
     messageRecieve(message) {
         console.log("message received! ")
-        var {messages} = this.state;
+        var {
+            messages
+        } = this.state;
         messages.push(message);
-        this.setState({messages});
+        this.setState({
+            messages
+        });
+    }
+
+    botAbout() {
+        var {
+            messages
+        } = this.state;
+        messages.push({
+            img: '../../static/bot.jpeg',
+            user: 'CHITT BOT',
+            text: 'Welcome to the General Chat Room! Go ahead and chat some chitt!'
+        });
+        this.setState({
+            messages
+        });
+    }
+    
+    botHelp() {
+        var {
+            messages
+        } = this.state;
+        messages.push({
+            img: '../../static/bot.jpeg',
+            user: 'CHITT BOT',
+            text: '!! about - I\'ll give you a general rundown of where you are at!, !! help - well you made it!, !! say <something> - and hopefully it\'s cool...'
+        });
+        this.setState({
+            messages
+        });
+    }
+    
+    botSay(data) {
+        var {
+            messages
+        } = this.state;
+        messages.push({
+            img: '../../static/bot.jpeg',
+            user: 'CHITT BOT',
+            text: data
+        });
+        this.setState({
+            messages
+        });
     }
 
     userJoined(data) {
-        var {users, messages} = this.state;
-        var {name} = data;
+        var {
+            users,
+            messages
+        } = this.state;
+        var {
+            name
+        } = data;
         users.push(name);
         messages.push({
             img: '../../static/bot.jpeg',
-            user: 'BOT BOT',
+            user: 'CHITT BOT',
             text: name + ' Joined'
         });
-        this.setState({users, messages});
+        this.setState({
+            users,
+            messages
+        });
     }
 
     userLeft(data) {
-        var {users, messages} = this.state;
-        var {name} = data;
+        var {
+            users,
+            messages
+        } = this.state;
+        var {
+            name
+        } = data;
         var index = users.indexOf(name);
         users.splice(index, 1);
         messages.push({
             img: '../../static/bot.jpeg',
-            user: 'BOT BOT',
+            user: 'CHITT BOT',
             text: name + ' Left'
         });
-        this.setState({users, messages});
+        this.setState({
+            users,
+            messages
+        });
     }
 
     handleMessageSubmit(message) {

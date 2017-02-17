@@ -5,12 +5,17 @@ import Message from './Message';
 const styles = {
     messageList: {
         position: 'fixed',
-        maxHeight: '90%',
+        top: '4em',
+        right: '0',
         width: '80%',
         bottom: '6.25em',
         overflow: 'auto',
         backgroundColor: 'rgb(255,64,129)',
         padding: '1em'
+    },
+    chatWindow: {
+        position: 'fixed',
+        bottom: '0'
     }
 }
 

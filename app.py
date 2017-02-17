@@ -1,5 +1,6 @@
 import os
 import json
+import re
 import eventlet
 eventlet.monkey_patch()
 from flask import Flask, render_template, jsonify
@@ -26,6 +27,8 @@ def on_connect():
     print 'Someone connected!'
     global totalUsersConnected
     totalUsersConnected += 1
+    
+    socketio.emit('user:join', { 'name': 'userPlaceholder'})
     # update total connected users
     socketio.emit('update', totalUsersConnected)
 
@@ -53,17 +56,37 @@ def get_messages():
 
 
 # on send message
+botSignal = re.compile('[!!]')
 @socketio.on('send:message')
 def sendMessage(msg):
     # console log message
     print 'sent message', msg['img'], msg['user'], msg['text']
-    # broadcast message to main chatroom
-    socketio.emit('send:message', msg, broadcast=True)
-    # add message to database
-    text = models.History(msg['img'], msg['user'], msg['text'])
-    models.db.session.add(text)
-    models.db.session.commit()
-    models.db.session.close()
+    
+    if re.match(botSignal, msg['text'].strip()[:2]):
+        print 'bot!'
+        try:
+            botCommand = msg['text'].split()[1]
+            if 'about' in botCommand:
+                print 'about'
+                socketio.emit('about')
+            elif 'help' in botCommand:
+                print 'help'
+                socketio.emit('help')
+            elif 'say' in botCommand:
+                print 'say'
+                socketio.emit('say', msg['text'].replace('!! say ', '' ))
+            else:
+                socketio.emit('say', 'What do you mean? Try using !! help.')
+        except:
+            socketio.emit('say', 'are you sure about that last message?')
+    else:
+        # broadcast message to main chatroom
+        socketio.emit('send:message', msg, broadcast=True)
+        # add message to database
+        text = models.History(msg['img'], msg['user'], msg['text'])
+        models.db.session.add(text)
+        models.db.session.commit()
+        models.db.session.close()
 
 if __name__ == '__main__':
     socketio.run(
