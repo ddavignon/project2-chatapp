@@ -1,7 +1,7 @@
 // scripts/Main.js
 import React from 'react';
 import ReactDOM from 'react-dom';
-import  App from './App';
+import  App from './Components/App';
 
 // required dependency for material ui
 import injectTapEventPlugin from 'react-tap-event-plugin';

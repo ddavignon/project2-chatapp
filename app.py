@@ -18,17 +18,11 @@ def index():
     return render_template('index.html')#, messages=messages)
 
 # on connection
-totalUsersConnected=0
 @socketio.on('connect')
 def on_connect():
     # count connected user
     print 'Someone connected!'
-    global totalUsersConnected
-    totalUsersConnected += 1
-    
-    socketio.emit('user:join', { 'name': 'userPlaceholder'})
-    # update total connected users
-    socketio.emit('update', totalUsersConnected)
+
 
 # on disconnnect
 @socketio.on('disconnect')
@@ -37,8 +31,6 @@ def on_disconnect():
     print('Client disconnected')
     global totalUsersConnected
     totalUsersConnected -= 1
-    # nofify of user disconnect
-    socketio.emit('user:left', { 'name': 'userPlaceholder'})
     # update total connected users
     socketio.emit('update', totalUsersConnected)
     
@@ -78,12 +70,16 @@ def sendMessage(msg):
             elif 'say' in botCommand:
                 print 'say'
                 socketio.emit('say', msg['message']['text'].replace('!! say ', '' ))
+            elif 'time' in botCommand:
+                print 'time'
+                socketio.emit('time')
             else:
                 socketio.emit('say', 'What do you mean? Try using !! help.')
         except:
             socketio.emit('say', 'are you sure about that last message?')
     else:
         # broadcast message to main chatroom
+        
         socketio.emit('send:message', {'text':msg['message']['text'], 'img':user['img'], 'user':user['user']}, broadcast=True)
         # add message to database
         text = models.History(user['img'], user['user'], msg['message']['text'])
@@ -91,6 +87,8 @@ def sendMessage(msg):
         models.db.session.commit()
         models.db.session.close()
         
+
+totalUsersConnected=0
 @socketio.on('FB-user')
 def FB_user(data):
     print data['facebook_user_token']
@@ -99,6 +97,14 @@ def FB_user(data):
     user = { 'img' : json['picture']['data']['url'], 'user': json['name'] }
     print user
     socketio.emit('init', user);
+    
+    global totalUsersConnected
+    totalUsersConnected += 1
+    
+    # socketio.emit('user:join', {'img' : json['picture']['data']['url'], 'name': json['name']})
+    socketio.emit('user:join', user)
+    # update total connected users
+    socketio.emit('update', totalUsersConnected)
     
     
 if __name__ == '__main__':

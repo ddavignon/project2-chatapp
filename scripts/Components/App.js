@@ -3,7 +3,9 @@ import React, {
 }
 from 'react';
 import {
-  ButtonGroup
+  ButtonGroup,
+  Jumbotron,
+  Grid
 }
 from 'react-bootstrap';
 import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider';
@@ -12,28 +14,30 @@ import Divider from 'material-ui/Divider';
 import AppBar from 'material-ui/AppBar';
 import MenuItem from 'material-ui/MenuItem';
 
-import ChatMain from './Components/ChatMain';
+import ChatMain from './ChatMain';
 import {
   Socket
 }
-from './Socket';;
+from '../Services/Socket';
 
 const styles = {
   appBar: {
     textAlign: 'left'
+  },
+  login: {
+    marginTop: '5em'
   }
 }
 
 class App extends Component {
-  constructor(props) {
-    super(props);
+  constructor() {
+    super();
     this.state = {
       isLoggedIn: false
     }
   }
 
-  componentDidMount() {
-            // check login status
+  componentDidMount() {        // check login status
     FB.getLoginStatus((response) => {
       if (response.status == 'connected') {
         Socket.emit('FB-user', {
@@ -63,20 +67,21 @@ class App extends Component {
   }
 
   onLogout(response) {
+    Socket.emit('user:left');
     this.setState({
       isLoggedIn: false
     });
   }
 
   render() {
-    const isLoggedIn = this.state.isLoggedIn;
-    let mainWindow = null;
-    if (isLoggedIn) {
-      mainWindow = <ChatMain />;
-    }
-    else {
-      mainWindow = <h1>Log in please!</h1>;
-    }
+    // const isLoggedIn = this.state.isLoggedIn;
+    // let mainWindow = null;
+    // if (isLoggedIn) {
+    //   mainWindow = <ChatMain>{this.props.children}</ChatMain>;
+    // }
+    // else {
+    //   mainWindow = <Grid><Jumbotron className="text-center" style={styles.login}><h1>Welcome to Chitt Chatt!</h1><p>Log in please!</p></Jumbotron></Grid>;
+    // }
     return (
       <MuiThemeProvider>
               <div className="App">
@@ -85,13 +90,6 @@ class App extends Component {
                   title="ChittChatt"
                   showMenuIconButton={false}
                   iconElementRight={
-                    <div>{
-                     // <div><a href="#" onclick="signOut();">Sign out</a></div>
-                    }
-                    <div style={styles.gSignIn}>
-                      <div className="g-signin2" data-onsuccess="onSignIn" data-theme="dark"></div>
-                    </div>
-                    <div>
                         <div
                           className="fb-login-button"
                           data-max-rows="1"
@@ -99,11 +97,11 @@ class App extends Component {
                           data-show-faces="false"
                           data-auto-logout-link="true">
                         </div>
-                      </div>
-                    </div>
                   }
                 />
-                {mainWindow}
+                <ChatMain>{this.props.children}</ChatMain>
+                {//mainWindow
+                }
               </div>
             </MuiThemeProvider>
     )

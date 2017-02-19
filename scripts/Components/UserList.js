@@ -21,19 +21,18 @@ class UserList extends Component {
     render() {
       return (
           <div className='users'>
-              
                 <List style={styles.sidePanel}>
                     <Paper zDepth={3} style={styles.paper}>
                         <Subheader>Online Users: {this.props.total}</Subheader>
                     </Paper>   
                      <Paper zDepth={2} style={styles.paper}>
-                    {
+                    { 
                         this.props.users.map((user, i) => {
                             return (
                                 <ListItem 
                                 key={i}
                                 primaryText={user}
-                                leftAvatar={<Avatar src="" />}
+                                leftAvatar={<Avatar src={''} />}
                                 rightIcon={<CommunicationChatBubble />}
                                 />
                             )

@@ -10,50 +10,27 @@ import {
 }
 from 'react-bootstrap';
 import axios from 'axios';
-
 import MessageBox from './MessageBox';
 import MessageList from './MessageList';
 import UserList from './UserList';
 
 const Socket = SocketIO.connect();
 
+
+
 class ChatMain extends Component {
 
-    constructor(props) {
-        super(props);
+    constructor() {
+        super();
         this.state = {
-            messages: [],
+            messages: ['img': '', 'user': '', 'text': ''],
             users: [
-                "Alice", "Bob"
+                "Chitt Bot"
             ],
             text: '',
-            user: ['img':'','user':''],
+            user: ['img': '', 'user': ''],
             usersConnected: "",
         }
-
-        this.handleMessageSubmit = this
-            .handleMessageSubmit
-            .bind(this);
-        this.messageRecieve = this
-            .messageRecieve
-            .bind(this);
-        this.userJoined = this
-            .userJoined
-            .bind(this);
-        this.userLeft = this
-            .userLeft
-            .bind(this);
-        this.updateUsersConnected = this
-            .updateUsersConnected
-            .bind(this);
-        this.loadMessages = this
-            .loadMessages
-            .bind(this);
-        this.botAbout = this.botAbout.bind(this);
-        this.botHelp = this.botHelp.bind(this);
-        this.botSay = this.botSay.bind(this);
-
-
         Socket.emit('get:messages');
     }
 
@@ -62,15 +39,16 @@ class ChatMain extends Component {
             .on('connect', function() {
                 console.log('Connecting to the server!');
             });
-        Socket.once('event', this.loadMessages);
-        Socket.on('update', this.updateUsersConnected);
-        Socket.on('init', this.initialize);
-        Socket.on('send:message', this.messageRecieve);
-        Socket.on('user:join', this.userJoined);
-        Socket.on('user:left', this.userLeft);
-        Socket.on('about', this.botAbout);
-        Socket.on('help', this.botHelp);
-        Socket.on('say', this.botSay);
+        Socket.once('event', this.loadMessages.bind(this));
+        Socket.on('update', this.updateUsersConnected.bind(this));
+        Socket.on('init', this.initialize.bind(this));
+        Socket.on('send:message', this.messageRecieve.bind(this));
+        Socket.on('user:join', this.userJoined.bind(this));
+        Socket.on('user:left', this.userLeft.bind(this));
+        Socket.on('about', this.botAbout.bind(this));
+        Socket.on('help', this.botHelp.bind(this));
+        Socket.on('say', this.botSay.bind(this));
+        Socket.on('time', this.botTime.bind(this));
 
         // const messages = axios.get('/chat');
         // console.log('messages', messages);
@@ -101,12 +79,15 @@ class ChatMain extends Component {
 
     initialize(data) {
         var {
+            users
+        } = this.state;
+        var {
             user
         } = data;
-        // this.setState({
-        //     users,
-        //     user: name
-        // });
+        this.setState({
+            users,
+            user: data
+        });
     }
 
     messageRecieve(data) {
@@ -120,6 +101,7 @@ class ChatMain extends Component {
             messages
         });
     }
+
 
     botAbout() {
         var {
@@ -142,8 +124,25 @@ class ChatMain extends Component {
         messages.push({
             img: '../../static/bot.jpeg',
             user: 'CHITT BOT',
-            text: '!! about - I\'ll give you a general rundown of where you are at!, !! help - well you made it!, !! say <something> - and hopefully it\'s cool...'
+            text: 'Here are some of my commands!'
+        }, {
+            img: '../../static/bot.jpeg',
+            user: 'CHITT BOT',
+            text: '!! help --> well you you\'re there! |'
+        }, {
+            img: '../../static/bot.jpeg',
+            user: 'CHITT BOT',
+            text: '!! about --> I\'ll give you a general rundown of where you are at! |'
+        }, {
+            img: '../../static/bot.jpeg',
+            user: 'CHITT BOT',
+            text: '!! say <something> --> and hopefully it\'s cool... |'
+        }, {
+            img: '../../static/bot.jpeg',
+            user: 'CHITT BOT',
+            text: '!! time --> I\'ll give you the time! |'
         });
+
         this.setState({
             messages
         });
@@ -163,19 +162,34 @@ class ChatMain extends Component {
         });
     }
 
+    botTime() {
+        var {
+            messages
+        } = this.state;
+        messages.push({
+            img: '../../static/bot.jpeg',
+            user: 'CHITT BOT',
+            text:'Today\'s date: ' + Date()
+        });
+
+
+        this.setState({
+            messages
+        });
+
+    }
+
     userJoined(data) {
+        console.log('UJ - ' +JSON.stringify(data));
         var {
             users,
             messages
         } = this.state;
-        var {
-            name
-        } = data;
-        users.push(name);
+        users.push(data['user']);
         messages.push({
             img: '../../static/bot.jpeg',
             user: 'CHITT BOT',
-            text: name + ' Joined'
+            text: data['user'] + ' Joined'
         });
         this.setState({
             users,
@@ -208,13 +222,16 @@ class ChatMain extends Component {
         // var {messages} = this.state; messages.push(message);
         // this.setState({messages});
         FB.getLoginStatus((response) => {
-          if (response.status == 'connected') {
-            Socket.emit('send:message', {
-              'facebook_user_token': response.authResponse.accessToken,
-              'message' :message
-            });
-        }
-    });
+            if (response.status == 'connected') {
+                Socket.emit('send:message', {
+                    'facebook_user_token': response.authResponse.accessToken,
+                    'message': message
+                });
+            }
+            else {
+                alert('Log in if you want to send some messages!')
+            }
+        });
     }
 
     render() {
@@ -227,14 +244,14 @@ class ChatMain extends Component {
                 <Grid fluid>
                     <Row style={style} >
                        <Col md={2}>
-                            <UserList img={this.state.img} users={this.state.users} total={this.state.usersConnected}/>
+                            <UserList users={this.state.users} total={this.state.usersConnected}/>
                         </Col>
                         <Col md={10}>
                             <MessageList messages={this.state.messages}/>
                         </Col>
                     </Row>
                 </Grid>
-                <MessageBox onMessageSubmit={this.handleMessageSubmit} user={this.state.user}/>
+                <MessageBox onMessageSubmit={this.handleMessageSubmit.bind(this)} user={this.state.user} />
             </div>
         )
     }
