@@ -9,7 +9,6 @@ appdirs==1.4.0
 click==6.7
 colorama==0.2.5
 configobj==4.7.2
-duplicity==0.6.23
 enum-compat==0.0.2
 enum34==1.1.6
 eventlet==0.20.1
