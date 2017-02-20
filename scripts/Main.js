@@ -1,7 +1,7 @@
 // scripts/Main.js
 import React from 'react';
 import ReactDOM from 'react-dom';
-import  App from './Components/App';
+import ChatMain from './Components/ChatMain';
 
 // required dependency for material ui
 import injectTapEventPlugin from 'react-tap-event-plugin';
@@ -11,7 +11,6 @@ injectTapEventPlugin();
 
 
 ReactDOM.render(
- <App />,
+ <ChatMain />,
  document.getElementById('root')
 );
-

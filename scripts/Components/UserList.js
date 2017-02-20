@@ -1,5 +1,12 @@
-import React, { Component } from 'react';
-import {List, ListItem} from 'material-ui/List';
+import React, {
+    Component
+}
+from 'react';
+import {
+    List,
+    ListItem
+}
+from 'material-ui/List';
 import Avatar from 'material-ui/Avatar';
 import Subheader from 'material-ui/Subheader';
 import Paper from 'material-ui/Paper';
@@ -19,8 +26,8 @@ const styles = {
 
 class UserList extends Component {
     render() {
-      return (
-          <div className='users'>
+        return (
+            <div className='users'>
                 <List style={styles.sidePanel}>
                     <Paper zDepth={3} style={styles.paper}>
                         <Subheader>Online Users: {this.props.total}</Subheader>
@@ -32,7 +39,6 @@ class UserList extends Component {
                                 <ListItem 
                                 key={i}
                                 primaryText={user}
-                                leftAvatar={<Avatar src={''} />}
                                 rightIcon={<CommunicationChatBubble />}
                                 />
                             )
@@ -41,8 +47,8 @@ class UserList extends Component {
                      </Paper>  
                 </List>           
           </div>
-      );
-  }
+        );
+    }
 }
 
 export default UserList;

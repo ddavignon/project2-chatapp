@@ -1,4 +1,4 @@
-import os, json, re, requests
+import os, json, re, requests, urllib3
 import eventlet
 eventlet.monkey_patch()
 from flask import Flask, render_template, jsonify
@@ -17,23 +17,48 @@ import models
 def index():
     return render_template('index.html')#, messages=messages)
 
-# on connection
+
 @socketio.on('connect')
 def on_connect():
     # count connected user
     print 'Someone connected!'
+    
+    
+connected_users = []
+@socketio.on('FB-user')
+def FB_user(data):
+    #print data['facebook_user_token']
+    response = requests.get('https://graph.facebook.com/v2.8/me?fields=id%2Cname%2Cpicture&access_token=' + data['facebook_user_token'])
+    json = response.json()
+    user = { 'img' : json['picture']['data']['url'], 'user': json['name'] }
+    print user
+    socketio.emit('init', user);
+    
+    global connected_users
+    if not any(user == connected_user for connected_user in connected_users):
+        print user['user'], ' vs ', connected_users
+        connected_users.append(user['user'])
+        # socketio.emit('user:join', {'img' : json['picture']['data']['url'], 'name': json['name']})
+        socketio.emit('user:join', {'user':user['user']})
+        print connected_users
+        socketio.emit('update', len(connected_users))
 
+@socketio.on('user:left')
+def user_left(data):
+    print 'user left', data
+    global connected_users
+    if any(data['user'] == connected_user for connected_user in connected_users):
+        socketio.emit('user:left-client', {'user': data['user']})
+        connected_users.remove(data['user'])
+        # socketio.emit('user:join', {'img' : json['picture']['data']['url'], 'name': json['name']})
+        print connected_users
+        socketio.emit('update', len(connected_users))
 
 # on disconnnect
 @socketio.on('disconnect')
 def on_disconnect():
     # remove user from count
     print('Client disconnected')
-    global totalUsersConnected
-    totalUsersConnected -= 1
-    # update total connected users
-    socketio.emit('update', totalUsersConnected)
-    
 
 # get messages
 @socketio.on('get:messages')
@@ -50,8 +75,8 @@ botSignal = re.compile('[!!]')
 @socketio.on('send:message')
 def sendMessage(msg):
     # console log message
-    print msg
-    print msg['facebook_user_token']
+    #print msg
+    #print msg['facebook_user_token']
     response = requests.get('https://graph.facebook.com/v2.8/me?fields=id%2Cname%2Cpicture&access_token=' + msg['facebook_user_token'])
     json = response.json()
     user = { 'img' : json['picture']['data']['url'], 'user': json['name'] }
@@ -70,12 +95,16 @@ def sendMessage(msg):
             elif 'say' in botCommand:
                 print 'say'
                 socketio.emit('say', msg['message']['text'].replace('!! say ', '' ))
-            elif 'time' in botCommand:
-                print 'time'
-                socketio.emit('time')
+            elif 'date' in botCommand:
+                print 'date'
+                socketio.emit('date')
+            elif 'hi' in botCommand:
+                print 'hi'
+                socketio.emit('hi')
             else:
                 socketio.emit('say', 'What do you mean? Try using !! help.')
-        except:
+        except Exception as err:
+            print err
             socketio.emit('say', 'are you sure about that last message?')
     else:
         # broadcast message to main chatroom
@@ -87,24 +116,6 @@ def sendMessage(msg):
         models.db.session.commit()
         models.db.session.close()
         
-
-totalUsersConnected=0
-@socketio.on('FB-user')
-def FB_user(data):
-    print data['facebook_user_token']
-    response = requests.get('https://graph.facebook.com/v2.8/me?fields=id%2Cname%2Cpicture&access_token=' + data['facebook_user_token'])
-    json = response.json()
-    user = { 'img' : json['picture']['data']['url'], 'user': json['name'] }
-    print user
-    socketio.emit('init', user);
-    
-    global totalUsersConnected
-    totalUsersConnected += 1
-    
-    # socketio.emit('user:join', {'img' : json['picture']['data']['url'], 'name': json['name']})
-    socketio.emit('user:join', user)
-    # update total connected users
-    socketio.emit('update', totalUsersConnected)
     
     
 if __name__ == '__main__':
