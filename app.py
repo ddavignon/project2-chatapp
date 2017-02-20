@@ -1,4 +1,4 @@
-import os, json, re, requests, urllib3
+import os, json, re, requests
 import eventlet
 eventlet.monkey_patch()
 from flask import Flask, render_template, jsonify
