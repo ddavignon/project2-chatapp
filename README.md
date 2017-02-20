@@ -11,6 +11,8 @@
 
 ## What are known problems, if any, with your project?
 
- I am having trouble getting the chat list to load on the bottom without overflow. I think it is an issue with the Material-UI List components.
+ I am having trouble getting the chat list to load on the bottom without overflow. I think it is an issue with the Material-UI List components. No Google Sign In...
 
 ## How would you improve if you had more time?
+
+ I would improve the UI of the chat list when a new message is entered. I would also add in Google Sign in. The user connected can be a little buggy testing with the same user across multiple browsers.
