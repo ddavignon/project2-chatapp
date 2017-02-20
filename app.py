@@ -40,7 +40,7 @@ def on_disconnect():
 def get_messages():
     print "serving messsages to user"
     # query the database
-    data = models.History.query.all();
+    data = models.Message.query.all();
     all_messages = [{'img': x.img, 'user': x.user, 'text': x.message}  for x in data]
     socketio.emit('event', all_messages)
 
@@ -82,7 +82,7 @@ def sendMessage(msg):
         
         socketio.emit('send:message', {'text':msg['message']['text'], 'img':user['img'], 'user':user['user']}, broadcast=True)
         # add message to database
-        text = models.History(user['img'], user['user'], msg['message']['text'])
+        text = models.Message(user['img'], user['user'], msg['message']['text'])
         models.db.session.add(text)
         models.db.session.commit()
         models.db.session.close()

@@ -1,10 +1,10 @@
 import os, app
 from flask_sqlalchemy import SQLAlchemy
 
-app.app.config['SQLALCHEMY_DATABASE_URI'] = os.getenv('DATABASE_URL')#'postgresql://dustin:potato@localhost/postgres'#'postgresql://dustin:potato@localhost/postgres'#'postgresql://dustin:potato@localhost/postgres'
+app.app.config['SQLALCHEMY_DATABASE_URI'] = 'postgresql://dustin:potato@localhost/postgres'#os.getenv('DATABASE_URL')#
 db = SQLAlchemy(app.app)
 
-class History(db.Model):
+class Message(db.Model):
     id = db.Column('id', db.Integer, primary_key=True)
     img = db.Column('img', db.String(300))
     user = db.Column('user', db.String(50))
