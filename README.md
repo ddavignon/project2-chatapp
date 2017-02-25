@@ -1,4 +1,4 @@
-# project2-h1-ddavignon
+# project2-h2-ddavignon
 
 
 ## What is the theme you'll be using for Project 2?
