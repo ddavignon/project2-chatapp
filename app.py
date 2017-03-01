@@ -70,6 +70,30 @@ def get_messages():
     socketio.emit('event', all_messages)
 
 
+def checkBotMessage(botCommand):
+    try:
+        if 'about' in botCommand:
+            print 'about'
+            socketio.emit('about')
+        elif 'help' in botCommand:
+            print 'help'
+            socketio.emit('help')
+        elif 'say' in botCommand:
+            print 'say'
+            socketio.emit('say', msg['message']['text'].replace('!! say ', '' ))
+        elif 'date' in botCommand:
+            print 'date'
+            socketio.emit('date')
+        elif 'hi' in botCommand:
+            print 'hi'
+            socketio.emit('hi')
+        else:
+            socketio.emit('say', 'What do you mean? Try using !! help.')
+    except Exception as err:
+        print err
+        socketio.emit('say', 'are you sure about that last message?')
+
+
 # on send message
 botSignal = re.compile('[!!]')
 @socketio.on('send:message')
@@ -84,28 +108,8 @@ def sendMessage(msg):
     
     if re.match(botSignal, msg['message']['text'].strip()[:2]):
         print 'bot!'
-        try:
-            botCommand = msg['message']['text'].split()[1]
-            if 'about' in botCommand:
-                print 'about'
-                socketio.emit('about')
-            elif 'help' in botCommand:
-                print 'help'
-                socketio.emit('help')
-            elif 'say' in botCommand:
-                print 'say'
-                socketio.emit('say', msg['message']['text'].replace('!! say ', '' ))
-            elif 'date' in botCommand:
-                print 'date'
-                socketio.emit('date')
-            elif 'hi' in botCommand:
-                print 'hi'
-                socketio.emit('hi')
-            else:
-                socketio.emit('say', 'What do you mean? Try using !! help.')
-        except Exception as err:
-            print err
-            socketio.emit('say', 'are you sure about that last message?')
+        checkBotMessage(msg['message']['text'].split()[1])
+
     else:
         # broadcast message to main chatroom
         
