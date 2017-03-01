@@ -21,7 +21,7 @@ def index():
 @socketio.on('connect')
 def on_connect():
     # count connected user
-    print 'Someone connected!'
+    socketio.send('connected!')
     
     
 connected_users = []
