@@ -71,7 +71,7 @@ def get_messages():
 
 
 def checkBotMessage(botCommand):
-    print 'bot!'
+    #print 'bot!'
     botMessage = ()
     try:
         botMessage = botCommand.split()[1]
@@ -86,7 +86,7 @@ def checkBotMessage(botCommand):
         elif 'hi' in botCommand:
             botMessage = ('hi',)
         else:
-            botMessage = ('say', 'What do you mean? Try using !! help.')
+            botMessage = ('say' , 'What do you mean? Try using !! help.')
     except Exception as err:
         botMessage = ('say', 'are you sure about that last message?')
             
@@ -119,7 +119,7 @@ def sendMessage(msg):
         
         socketio.emit('send:message', {'text':msg['message']['text'], 'img':user['img'], 'user':user['user']}, broadcast=True)
         # add message to database
-        text = models.Message(user['img'], user['user'], msg['message']['text'])
+        text = models.Message(user['img'], user['user'], message)
         models.db.session.add(text)
         models.db.session.commit()
         models.db.session.close()
