@@ -18,5 +18,3 @@ class Message(db.Model):
     def __repr__(self):
          return '<User> ' +  self.user + ' <Message> ' + self.message
          
-    
-db.create_all()
