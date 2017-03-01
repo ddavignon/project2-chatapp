@@ -71,27 +71,26 @@ def get_messages():
 
 
 def checkBotMessage(botCommand):
+    print 'bot!'
+    botMessage = ()
     try:
+        botMessage = botCommand.split()[1]
         if 'about' in botCommand:
-            print 'about'
-            socketio.emit('about')
+            botMessage = ('about',)
         elif 'help' in botCommand:
-            print 'help'
-            socketio.emit('help')
+            botMessage = ('help',)
         elif 'say' in botCommand:
-            print 'say'
-            socketio.emit('say', msg['message']['text'].replace('!! say ', '' ))
+            botMessage = ('say', botCommand.replace('!! say ', '' ))
         elif 'date' in botCommand:
-            print 'date'
-            socketio.emit('date')
+            botMessage = ('date',)
         elif 'hi' in botCommand:
-            print 'hi'
-            socketio.emit('hi')
+            botMessage = ('hi',)
         else:
-            socketio.emit('say', 'What do you mean? Try using !! help.')
+            botMessage = ('say', 'What do you mean? Try using !! help.')
     except Exception as err:
-        print err
-        socketio.emit('say', 'are you sure about that last message?')
+        botMessage = ('say', 'are you sure about that last message?')
+            
+    return botMessage
 
 
 # on send message
@@ -106,10 +105,15 @@ def sendMessage(msg):
     user = { 'img' : json['picture']['data']['url'], 'user': json['name'] }
     print 'sent message', msg['message']['text'], user['img'], user['user']
     
-    if re.match(botSignal, msg['message']['text'].strip()[:2]):
-        print 'bot!'
-        checkBotMessage(msg['message']['text'].split()[1])
-
+    message = msg['message']['text']
+    if re.match(botSignal, message.strip()[:2]):
+        checkMessage = checkBotMessage(message)
+        print checkMessage
+        if len(checkMessage) > 1:
+            socketio.emit(checkMessage[0], checkMessage[1])
+        else:
+            socketio.emit(checkMessage)
+        
     else:
         # broadcast message to main chatroom
         
