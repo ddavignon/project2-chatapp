@@ -1,6 +1,6 @@
-import os, json, re, requests
-import eventlet
-eventlet.monkey_patch()
+import os, json, re, requests, unirest
+#import eventlet
+#eventlet.monkey_patch()
 from flask import Flask, render_template, jsonify
 from flask_socketio import SocketIO, send
 from flask_sqlalchemy import SQLAlchemy
@@ -74,17 +74,21 @@ def checkBotMessage(botCommand):
     #print 'bot!'
     botMessage = ()
     try:
-        botMessage = botCommand.split()[1]
-        if 'about' in botCommand:
+        botCheckMessage = botCommand.split()[1]
+        if 'about' in botCheckMessage:
             botMessage = ('about',)
-        elif 'help' in botCommand:
+        elif 'help' in botCheckMessage:
             botMessage = ('help',)
-        elif 'say' in botCommand:
+        elif 'say' in botCheckMessage:
             botMessage = ('say', botCommand.replace('!! say ', '' ))
-        elif 'date' in botCommand:
+        elif 'date' in botCheckMessage:
             botMessage = ('date',)
-        elif 'hi' in botCommand:
+        elif 'hi' in botCheckMessage:
             botMessage = ('hi',)
+        elif 'Chuck' in botCheckMessage:
+            print 'Chuck'
+            print chuck_norris()
+            botMessage = ('say', chuck_norris())
         else:
             botMessage = ('say' , 'What do you mean? Try using !! help.')
     except Exception as err:
@@ -92,6 +96,20 @@ def checkBotMessage(botCommand):
             
     return botMessage
 
+def chuck_norris():
+    # These code snippets use an open-source library. http://unirest.io/python
+    try:
+        response = unirest.get("https://matchilling-chuck-norris-jokes-v1.p.mashape.com/jokes/random",
+          headers={
+            "X-Mashape-Key": "aPve5xnIx3mshrruwpi8f0TEJvrlp1KaJvVjsnnpBSF18k1XGU",
+            "accept": "application/json"
+          }
+        )
+    except Exception as err:
+        print err
+        return err
+
+    return response.body['value'] or 'oops'
 
 # on send message
 botSignal = re.compile('[!!]')
