@@ -7,3 +7,6 @@ deployment:
         branch: master
         heroku:
             appname: chittchatt
+machine:
+    environment:
+        DATABASE_URL: 'postgres://yhovoxlkjyqsdh:363d147f214104fff6173787dfc7a2c123280b551931e06510d373ea44fe4c3b@ec2-23-21-204-166.compute-1.amazonaws.com:5432/d3dauet7agoi8f'
