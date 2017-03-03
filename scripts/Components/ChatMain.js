@@ -201,6 +201,10 @@ class ChatMain extends Component {
             img: '../../static/bot.jpeg',
             user: 'CHITT BOT',
             text: '!! hi --> Just say hi!'
+        }, {
+            img: '../../static/bot.jpeg',
+            user: 'CHITT BOT',
+            text: '!! Chuck --> Get a random Chuck Norris quote to brighten your day!'
         });
 
         this.setState({
