@@ -33,7 +33,7 @@ class MessageList extends Component {
                     .messages
                     .map((message, i) => {
                         if (message.text.includes('http://') || message.text.includes('https://')) {
-                            if (message.text.includes('.png') || message.text.includes('.jpeg') || message.text.includes('.jpg')) {
+                            if (message.text.includes('.png') || message.text.includes('.jpeg') || message.text.includes('.jpg') || message.text.includes('.gif')) {
                                 userMessage = <span>{message.user}<br></br><img style={{height: '200px', paddingTop: '.5em'}} alt={message.text} src={message.text} /></span>;
                                 displayMessage = (<span><a href={message.text} target="_blank">{message.text}</a></span>);
                                 messageStyles={height: '270px', margin: '.5em'}
