@@ -1,7 +1,5 @@
 import React, {Component} from 'react';
 import {List} from 'material-ui/List';
-import validator from 'validator';
-import isImage from 'is-image';
 import Message from './Message';
 
 const styles = {
@@ -34,23 +32,23 @@ class MessageList extends Component {
                     .props
                     .messages
                     .map((message, i) => {
-                        if (validator.isURL(message.text)) {
-                            if (isImage(message.text)) {
+                        if (message.text.includes('http://') || message.text.includes('https://')) {
+                            if (message.text.includes('.png') || message.text.includes('.jpeg') || message.text.includes('.jpg')) {
                                 userMessage = <span>{message.user}<br></br><img style={{height: '200px', paddingTop: '.5em'}} alt={message.text} src={message.text} /></span>;
                                 displayMessage = (<span><a href={message.text} target="_blank">{message.text}</a></span>);
-                                messageStyles={height: '265px', margin: '.5em'}
+                                messageStyles={height: '270px', margin: '.5em'}
                             } else {
                                 userMessage= message.user
                                 displayMessage = <a href={message.text} target="_blank">{message.text}</a>;
                                 messageStyles={margin: '.5em'}
-                                
                             }
+                            return (<Message key={i} img={message.img} user={userMessage} text={displayMessage} styles={messageStyles}/>);
                         } else {
                             userMessage= message.user
                             displayMessage = message.text;
                             messageStyles={margin: '.5em'}
-                        }
                         return (<Message key={i} img={message.img} user={userMessage} text={displayMessage} styles={messageStyles}/>);
+                        }
                     })
                 }
                 </List>
