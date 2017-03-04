@@ -3,7 +3,8 @@ import sys
 import app
 
 class SocketIOTests(unittest.TestCase):
-    # def test_on_connect(self):
+    def test_on_connect(self):
+        return True
     #     client = app.socketio.test_client(app.app)
     #     r = client.get_received()
     #     s_msg - r[0]
