@@ -13,6 +13,12 @@
 
 ## What are known problems, if any, with your project?
 
+ I don't have enough socketio tests. I was having trouble with the testing and kept
+ getting an unusual error. I ended up upgrading Flask-SocketIO  from 2.8.2 to the latest version 2.8.5. I was able to add two socketio_tests and will add more if I get the time to work on the project more.
+ 
+![Alt text](socketio_tests.png)
+ 
+
  From handin 1:
  
  -- I am having trouble getting the chat list to load on the bottom without overflow. I think it is an issue with the Material-UI List components. No Google Sign In...
