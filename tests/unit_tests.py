@@ -22,17 +22,28 @@ class ChatBotResponseTest(unittest.TestCase):
         r = app.checkBotMessage('!! say This is a test')
         self.assertIsInstance(r, tuple)
         
+    def test_chat_error(self):
+        r = app.checkBotMessage('tomato')
+        self.assertTupleEqual(r, ('say', 'are you sure about that last message?'))
+        
 class checkFilePath(unittest.TestCase):
     def test_index(self):
         r = os.path.isfile('./templates/index.html')
         self.assertEqual(r, True)
         
-# class ModelTest(unittest.TestCase):
-#     def test_model_saves(self):
-#         mymodel = models.Message('https://www.google.com/url?sa=i&rct=j&q=&esrc=s&source=images&cd=&cad=rja&uact=8&ved=0ahUKEwiYp6bU6LTSAhVFzFQKHUBQADIQjRwIBw&url=http%3A%2F%2Fxiostorage.com%2Feverythings-a-test-with-data-storage-performance%2F&bvm=bv.148441817,d.cGw&psig=AFQjCNH4mvyHEabYxzqQDngsjw7BlJHL0Q&ust=1488440917341109','test-user','A message about bacon')
-#         models.db.session.add(mymodel)
-#         models.db.session.commit()
-#         self.assertEqual(mymodel.id, True)
+    def test_script_exists(self):
+        r = os.path.isfile('./static/script.js')
+        self.assertEqual(r, True)
+        
+    def test_background_image(self):
+        r = os.path.isfile('./static/images/theCity.png')
+        self.assertEqual(r, True)
+        
+class ModelTest(unittest.TestCase):
+     def test_model_saves(self):
+         db_values = []
+         db_values = models.Message.query.all()
+         self.assertGreater(len(db_values), 0)
         
 if __name__ == '__main__':
     unittest.main()
