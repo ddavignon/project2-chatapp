@@ -13,8 +13,8 @@
 
 ## What are known problems, if any, with your project?
 
- I don't have enough socketio tests. I was having trouble with the testing and kept
- getting an unusual error. I ended up upgrading Flask-SocketIO  from 2.8.2 to the latest version 2.8.5. I was able to add two socketio_tests and will add more if I get the time to work on the project more.
+ I was having trouble with the testing and kept getting an unusual error. I ended up upgrading Flask-SocketIO  from 2.8.2 to the latest version 2.8.5. I was able to add two socketio_tests and will add more if I get the time to work on the project more.
+ You can see the error that I was getting below.
  
 ![Alt text](socketio_error.png)
  
