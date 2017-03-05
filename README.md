@@ -27,7 +27,7 @@
 
  
 I would improve the UI of the chat list when a new message is entered. I would also add in Google Sign in. The user connected can be a little buggy testing with the same user across multiple browsers.
-
+I would also refactor my code to allow for more tests.
 
 # I **OPT OUT** of Improvements from handin 1
 
