@@ -59,6 +59,7 @@ def user_left(data):
 def on_disconnect():
     # remove user from count
     print('Client disconnected')
+    socketio.send('disconnect')
 
 # get messages
 @socketio.on('get:messages')
