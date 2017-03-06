@@ -22,7 +22,7 @@ class MessageDatabaseTest(LiveServerTestCase):
         test_msg = models.Message('test','test','test')
         models.db.session.add(test_msg)
         models.db.session.commit()
-        models.db.session.delete('test','test','test')
+        models.db.session.delete(test_msg)
         models.db.session.commit()
         models.db.session.close()
         
